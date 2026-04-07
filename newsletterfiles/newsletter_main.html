@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>뉴스레터 제목 Brief — No.142</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Unbounded:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#B8B8B8;font-family:'DM Sans',sans-serif;color:#111;}
+
+/* ── TOP BAR ── */
+.topbar{
+  background:#111;display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:38px;border-bottom:1px solid #222;
+}
+.topbar-l{display:flex;gap:24px;align-items:center;}
+.topbar-tag{font-family:'Unbounded',sans-serif;font-size:8px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#555;}
+.topbar-tag.hot{color:#CCC;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+.topbar-r{font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:.12em;color:#444;text-transform:uppercase;}
+
+/* ── MASTHEAD ── */
+.mast{background:#111;padding:28px 32px 0;border-bottom:1px solid #2A2A2A;}
+.mast-top{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;}
+.mast-logo{font-family:'Bebas Neue',sans-serif;font-size:88px;line-height:.85;letter-spacing:-.01em;color:#F5F5F5;}
+.mast-logo span{color:#555;}
+.mast-right{text-align:right;}
+.mast-issue{font-family:'Unbounded',sans-serif;font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#444;margin-bottom:8px;}
+.mast-sub-btn{
+  display:inline-block;border:1px solid #F5F5F5;padding:8px 20px;
+  font-family:'Unbounded',sans-serif;font-size:8px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:#F5F5F5;
+  cursor:pointer;transition:all .2s;
+}
+.mast-sub-btn:hover{background:#F5F5F5;color:#111;}
+.mast-nav{display:flex;gap:0;border-top:1px solid #2A2A2A;margin:0 -32px;}
+.mast-nav-item{
+  flex:1;padding:12px 0;text-align:center;
+  font-family:'Unbounded',sans-serif;font-size:8px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:#444;
+  border-right:1px solid #2A2A2A;cursor:pointer;transition:all .2s;
+}
+.mast-nav-item:last-child{border-right:none;}
+.mast-nav-item.active,.mast-nav-item:hover{color:#F5F5F5;background:#1A1A1A;}
+
+/* ── HERO ── */
+.hero{display:grid;grid-template-columns:58% 42%;min-height:480px;}
+.hero-l{
+  background:#E8E8E8;padding:48px 36px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  border-right:2px solid #111;position:relative;overflow:hidden;
+  cursor:pointer;transition:background .2s;
+}
+.hero-l:hover{background:#DEDEDE;}
+.hero-l-bg{
+  position:absolute;top:-20px;right:-20px;
+  font-family:'Bebas Neue',sans-serif;font-size:320px;line-height:1;
+  color:rgba(0,0,0,.04);letter-spacing:-.04em;pointer-events:none;white-space:nowrap;
+}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:28px;}
+.hero-pill{
+  background:#111;padding:4px 12px;
+  font-family:'Unbounded',sans-serif;font-size:8px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:#F5F5F5;
+}
+.hero-issue-line{font-family:'Unbounded',sans-serif;font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:#999;}
+.hero-hed{
+  font-family:'Bebas Neue',sans-serif;font-size:90px;line-height:.9;
+  letter-spacing:.01em;color:#111;margin-bottom:20px;position:relative;z-index:1;
+}
+.hero-hed em{font-style:normal;-webkit-text-stroke:1.5px #111;color:transparent;}
+.hero-dek{font-size:13px;line-height:1.75;color:#666;max-width:320px;margin-bottom:28px;position:relative;z-index:1;}
+.hero-byline{display:flex;align-items:center;gap:16px;}
+.hero-byline-name{font-family:'Unbounded',sans-serif;font-size:8px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#333;}
+.hero-byline-time{font-size:11px;color:#AAA;letter-spacing:.05em;}
+.hero-r{background:#111;display:flex;flex-direction:column;cursor:pointer;}
+.hero-r-img{
+  flex:1;background:#1E1E1E;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;border-bottom:1px solid #2A2A2A;
+  transition:background .2s;
+}
+.hero-r:hover .hero-r-img{background:#252525;}
+.hero-r-img-box{width:120px;height:160px;border:1px solid #333;display:flex;align-items:center;justify-content:center;}
+.hero-r-img-label{font-family:'Unbounded',sans-serif;font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:#444;}
+.hero-r-num{position:absolute;bottom:16px;right:20px;font-family:'Bebas Neue',sans-serif;font-size:140px;line-height:1;color:#1C1C1C;}
+.hero-r-caption{padding:20px 24px;}
+.hero-r-caption-hed{font-family:'Unbounded',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#777;margin-bottom:6px;}
+.hero-r-caption-body{font-size:12px;line-height:1.6;color:#555;}
+
+/* ── TICKER ── */
+.ticker{
+  background:#F0F0F0;border-top:2px solid #111;border-bottom:2px solid #111;
+  padding:0 32px;display:flex;align-items:center;height:40px;overflow:hidden;
+}
+.ticker-label{
+  font-family:'Unbounded',sans-serif;font-size:8px;font-weight:900;
+  letter-spacing:.25em;text-transform:uppercase;color:#111;
+  padding-right:24px;border-right:1px solid #CCC;margin-right:24px;white-space:nowrap;
+}
+.ticker-track{display:flex;gap:32px;align-items:center;white-space:nowrap;animation:ticker 20s linear infinite;}
+@keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.ticker-item{display:flex;gap:8px;align-items:center;cursor:pointer;}
+.ticker-item:hover .ticker-v{color:#111;}
+.ticker-k{font-family:'Unbounded',sans-serif;font-size:8px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#888;}
+.ticker-v{font-size:11px;font-weight:500;color:#444;transition:color .2s;}
+.ticker-chg.up{color:#2C7A3A;font-size:10px;}
+.ticker-chg.dn{color:#B83232;font-size:10px;}
+.ticker-sep{width:1px;height:12px;background:#CCC;}
+
+/* ── SECTION HEADER ── */
+.sec-hd{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  padding:36px 32px 14px;border-bottom:1.5px solid #111;
+}
+.sec-hd-label{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:.04em;color:#111;line-height:1;}
+.sec-hd-sub{
+  font-family:'Unbounded',sans-serif;font-size:8px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:#999;
+  padding-bottom:6px;cursor:pointer;transition:color .2s;
+}
+.sec-hd-sub:hover{color:#333;}
+
+/* ── CARD GRID ── */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5px;background:#111;margin:1.5px 0;}
+.card{
+  background:#CACACA;padding:28px 24px;position:relative;
+  cursor:pointer;transition:background .25s,transform .15s;overflow:hidden;
+}
+.card::after{
+  content:'';position:absolute;inset:0;background:rgba(0,0,0,0);
+  transition:background .25s;pointer-events:none;
+}
+.card:hover{background:#BFBFBF;}
+.card:hover .card-arrow{color:rgba(0,0,0,.4);transform:translate(2px,-2px);}
+.card.dark{background:#1A1A1A;}
+.card.dark:hover{background:#222;}
+.card-num{font-family:'Bebas Neue',sans-serif;font-size:56px;line-height:1;color:rgba(0,0,0,.1);margin-bottom:12px;}
+.card.dark .card-num{color:rgba(255,255,255,.07);}
+.card-cat{font-family:'Unbounded',sans-serif;font-size:7px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:#888;margin-bottom:10px;}
+.card.dark .card-cat{color:#555;}
+.card-title{font-family:'Unbounded',sans-serif;font-size:14px;font-weight:700;line-height:1.25;color:#111;margin-bottom:12px;text-transform:uppercase;}
+.card.dark .card-title{color:#E0E0E0;}
+.card-body{font-size:12px;line-height:1.7;color:#666;}
+.card.dark .card-body{color:#666;}
+.card-arrow{
+  position:absolute;bottom:22px;right:22px;font-size:18px;
+  color:rgba(0,0,0,.15);transition:color .2s,transform .2s;
+}
+.card.dark .card-arrow{color:rgba(255,255,255,.1);}
+.card.dark:hover .card-arrow{color:rgba(255,255,255,.4);}
+
+/* ── FEATURE SPLIT ── */
+.feat{display:grid;grid-template-columns:1.6fr 1fr;gap:1.5px;background:#111;}
+.feat-main{
+  background:#111;padding:44px 36px;cursor:pointer;transition:background .2s;
+}
+.feat-main:hover{background:#1A1A1A;}
+.feat-main .card-cat{color:#555;}
+.feat-main .card-title{
+  font-family:'Bebas Neue',sans-serif;font-size:52px;font-weight:400;
+  line-height:.95;color:#E0E0E0;margin-bottom:20px;text-transform:none;
+}
+.feat-main .card-title em{font-style:normal;-webkit-text-stroke:1px #555;color:transparent;}
+.feat-main .card-body{color:#666;}
+.feat-side{display:flex;flex-direction:column;gap:1.5px;}
+.feat-side-item{
+  flex:1;background:#C8C8C8;padding:28px 24px;cursor:pointer;transition:background .2s;
+}
+.feat-side-item:hover{background:#BDBDBD;}
+.feat-side-item .card-num{font-size:40px;}
+.feat-side-item .card-title{font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;}
+
+/* ── QUOTE BAND ── */
+.quote-band{
+  background:#E0E0E0;padding:44px 32px;
+  border-top:1.5px solid #111;border-bottom:1.5px solid #111;
+  display:flex;align-items:flex-start;gap:32px;
+}
+.quote-mark{font-family:'Bebas Neue',sans-serif;font-size:120px;line-height:.7;color:rgba(0,0,0,.1);flex-shrink:0;}
+.quote-body{flex:1;}
+.quote-text{font-family:'Unbounded',sans-serif;font-size:16px;font-weight:700;line-height:1.5;color:#111;margin-bottom:16px;text-transform:uppercase;letter-spacing:.02em;}
+.quote-attr{font-family:'Unbounded',sans-serif;font-size:8px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;color:#888;}
+
+/* ── BRIEF ROW ── */
+.brief-wrap{padding:0 0 1.5px;}
+.brief-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5px;background:#111;}
+.brief-card{
+  background:#D4D4D4;padding:22px 20px;
+  cursor:pointer;transition:background .2s;
+}
+.brief-card:hover{background:#C9C9C9;}
+.brief-n{font-family:'Bebas Neue',sans-serif;font-size:60px;color:rgba(0,0,0,.08);line-height:1;margin-bottom:6px;}
+.brief-title{font-family:'Unbounded',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;line-height:1.3;color:#111;margin-bottom:8px;letter-spacing:.05em;}
+.brief-body{font-size:11px;line-height:1.65;color:#777;}
+
+/* ── FOOTER ── */
+.foot{
+  background:#111;padding:40px 32px 32px;
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;
+}
+.foot-logo{font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:-.01em;color:#F5F5F5;margin-bottom:8px;}
+.foot-tag{font-family:'Unbounded',sans-serif;font-size:7px;letter-spacing:.2em;text-transform:uppercase;color:#444;margin-bottom:20px;}
+.foot-copy{font-size:10px;color:#333;line-height:1.8;}
+.foot-col-title{
+  font-family:'Unbounded',sans-serif;font-size:8px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:#555;
+  margin-bottom:16px;border-bottom:1px solid #2A2A2A;padding-bottom:10px;
+}
+.foot-link{font-size:11px;color:#555;display:block;margin-bottom:8px;cursor:pointer;transition:color .2s;text-decoration:none;}
+.foot-link:hover{color:#AAA;}
+
+/* ── SUBSCRIBE MODAL ── */
+.modal-bg{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);
+  z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(4px);
+}
+.modal-bg.open{display:flex;}
+.modal-box{
+  background:#111;border:1px solid #333;padding:48px 40px;max-width:440px;width:90%;
+  position:relative;animation:fadeUp .3s ease;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.modal-close{
+  position:absolute;top:16px;right:20px;font-size:20px;color:#555;
+  cursor:pointer;transition:color .2s;background:none;border:none;
+}
+.modal-close:hover{color:#F5F5F5;}
+.modal-eyebrow{
+  font-family:'Unbounded',sans-serif;font-size:8px;font-weight:700;
+  letter-spacing:.25em;text-transform:uppercase;color:#555;margin-bottom:16px;
+}
+.modal-title{
+  font-family:'Bebas Neue',sans-serif;font-size:48px;line-height:.95;
+  color:#F5F5F5;margin-bottom:16px;
+}
+.modal-sub{font-size:12px;line-height:1.7;color:#666;margin-bottom:28px;}
+.modal-input{
+  width:100%;background:#1A1A1A;border:1px solid #333;padding:12px 16px;
+  font-family:'DM Sans',sans-serif;font-size:13px;color:#F5F5F5;
+  margin-bottom:12px;outline:none;transition:border-color .2s;
+}
+.modal-input:focus{border-color:#777;}
+.modal-input::placeholder{color:#444;}
+.modal-btn{
+  width:100%;background:#F5F5F5;border:none;padding:14px;
+  font-family:'Unbounded',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:#111;
+  cursor:pointer;transition:background .2s;
+}
+.modal-btn:hover{background:#DDD;}
+.modal-fine{font-size:10px;color:#444;margin-top:12px;line-height:1.6;}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:32px;right:32px;
+  background:#F5F5F5;color:#111;
+  font-family:'Unbounded',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.15em;text-transform:uppercase;
+  padding:14px 20px;opacity:0;transform:translateY(8px);
+  transition:opacity .3s,transform .3s;z-index:1001;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateY(0);}
+
+/* ── PROGRESS BAR ── */
+.progress{position:fixed;top:0;left:0;height:2px;background:#F5F5F5;z-index:1000;width:0%;transition:width .1s;}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<!-- SUBSCRIBE MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-eyebrow">Weekly Newsletter</div>
+    <div class="modal-title">매주 화요일,<br>시장을 읽는<br>브리핑</div>
+    <div class="modal-sub">경제·금융·테크·컬처까지. 핵심 스토리만 골라 매주 화요일 오전 9시 발송합니다. 구독자 14만 명과 함께하세요.</div>
+    <input class="modal-input" type="email" placeholder="이메일 주소 입력" id="email-input">
+    <button class="modal-btn" onclick="handleSubscribe()">무료 구독 신청 →</button>
+    <div class="modal-fine">구독은 언제든지 취소할 수 있습니다. 개인정보는 뉴스레터 발송 목적으로만 사용됩니다.</div>
+  </div>
+</div>
+
+<div class="toast" id="toast">구독 신청 완료!</div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-l">
+    <span class="topbar-tag hot">● LIVE NOW</span>
+    <span class="topbar-tag">NO. 142</span>
+    <span class="topbar-tag" id="live-date">APR 07 2026</span>
+  </div>
+  <div class="topbar-r">Seoul · KST <span id="live-time">09:00</span></div>
+</div>
+
+<!-- MASTHEAD -->
+<div class="mast">
+  <div class="mast-top">
+    <div class="mast-logo">뉴스레터 제목<span></span></div>
+    <div class="mast-right">
+      <div class="mast-issue">VOL.12 — SPRING EDITION</div>
+      <div class="mast-sub-btn" onclick="openModal()">뉴스레터 구독</div>
+    </div>
+  </div>
+  <div class="mast-nav">
+    <div class="mast-nav-item active" onclick="filterSection('trend')">트렌드</div>
+    <div class="mast-nav-item" onclick="filterSection('tech')">테크</div>
+    <div class="mast-nav-item" onclick="filterSection('culture')">컬처</div>
+    <div class="mast-nav-item" onclick="filterSection('biz')">비즈니스</div>
+    <div class="mast-nav-item" onclick="filterSection('global')">글로벌</div>
+    <div class="mast-nav-item" onclick="filterSection('opinion')">오피니언</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-l" onclick="goArticle('cover')">
+    <div class="hero-l-bg">NO</div>
+    <div>
+      <div class="hero-eyebrow">
+        <div class="hero-pill">COVER</div>
+        <div class="hero-issue-line">THIS WEEK'S STORY</div>
+      </div>
+      <div class="hero-hed">기사 제목<br>자리입니다<br><em>여기입니다</em></div>
+      <div class="hero-dek">가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마. 바사아자 차카타파 하가나다 라마바사 아자차카.</div>
+    </div>
+    <div class="hero-byline">
+      <span class="hero-byline-name">기자 이름</span>
+      <span class="hero-byline-time">7 MIN READ</span>
+    </div>
+  </div>
+  <div class="hero-r" onclick="goArticle('cover')">
+    <div class="hero-r-img">
+      <div class="hero-r-img-box"><span class="hero-r-img-label">커버 이미지</span></div>
+      <div class="hero-r-num">01</div>
+    </div>
+    <div class="hero-r-caption">
+      <div class="hero-r-caption-hed">기사 제목 — 부제</div>
+      <div class="hero-r-caption-body">가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <span class="ticker-label">MARKET</span>
+  <div class="ticker-track" id="ticker-track">
+    <div class="ticker-item" onclick="goExternal('https://finance.naver.com/sise/')">
+      <span class="ticker-k">KOSPI</span><span class="ticker-v">2,481</span><span class="ticker-chg dn">▼1.42%</span>
+    </div>
+    <div class="ticker-sep"></div>
+    <div class="ticker-item" onclick="goExternal('https://finance.naver.com/marketindex/')">
+      <span class="ticker-k">USD/KRW</span><span class="ticker-v">1,481</span><span class="ticker-chg dn">▼0.83%</span>
+    </div>
+    <div class="ticker-sep"></div>
+    <div class="ticker-item" onclick="goExternal('https://coinmarketcap.com/')">
+      <span class="ticker-k">BTC</span><span class="ticker-v">$78,240</span><span class="ticker-chg dn">▼5.12%</span>
+    </div>
+    <div class="ticker-sep"></div>
+    <div class="ticker-item" onclick="goExternal('https://finance.naver.com/world/')">
+      <span class="ticker-k">NASDAQ</span><span class="ticker-v">16,204</span><span class="ticker-chg dn">▼5.82%</span>
+    </div>
+    <div class="ticker-sep"></div>
+    <div class="ticker-item" onclick="goExternal('https://finance.naver.com/marketindex/')">
+      <span class="ticker-k">GOLD</span><span class="ticker-v">$3,167</span><span class="ticker-chg up">▲1.23%</span>
+    </div>
+    <div class="ticker-sep"></div>
+    <!-- duplicate for seamless loop -->
+    <div class="ticker-item" onclick="goExternal('https://finance.naver.com/sise/')">
+      <span class="ticker-k">KOSPI</span><span class="ticker-v">2,481</span><span class="ticker-chg dn">▼1.42%</span>
+    </div>
+    <div class="ticker-sep"></div>
+    <div class="ticker-item" onclick="goExternal('https://finance.naver.com/marketindex/')">
+      <span class="ticker-k">USD/KRW</span><span class="ticker-v">1,481</span><span class="ticker-chg dn">▼0.83%</span>
+    </div>
+    <div class="ticker-sep"></div>
+    <div class="ticker-item" onclick="goExternal('https://coinmarketcap.com/')">
+      <span class="ticker-k">BTC</span><span class="ticker-v">$78,240</span><span class="ticker-chg dn">▼5.12%</span>
+    </div>
+    <div class="ticker-sep"></div>
+    <div class="ticker-item" onclick="goExternal('https://finance.naver.com/world/')">
+      <span class="ticker-k">NASDAQ</span><span class="ticker-v">16,204</span><span class="ticker-chg dn">▼5.82%</span>
+    </div>
+    <div class="ticker-sep"></div>
+    <div class="ticker-item" onclick="goExternal('https://finance.naver.com/marketindex/')">
+      <span class="ticker-k">GOLD</span><span class="ticker-v">$3,167</span><span class="ticker-chg up">▲1.23%</span>
+    </div>
+  </div>
+</div>
+
+<!-- TOP STORIES -->
+<div class="sec-hd">
+  <div class="sec-hd-label">이번 주 — TOP STORIES</div>
+  <div class="sec-hd-sub" onclick="goExternal('https://www.sedaily.com/')">전체보기 →</div>
+</div>
+
+<div class="grid3">
+  <div class="card" onclick="goArticle('trend')">
+    <div class="card-num">01</div>
+    <div class="card-cat">트렌드 / CULTURE</div>
+    <div class="card-title">기사 제목</div>
+    <div class="card-body">가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마.</div>
+    <div class="card-arrow">↗</div>
+  </div>
+  <div class="card dark" onclick="goArticle('tech')">
+    <div class="card-num">02</div>
+    <div class="card-cat">테크 / TECH</div>
+    <div class="card-title">기사 제목</div>
+    <div class="card-body">가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마.</div>
+    <div class="card-arrow">↗</div>
+  </div>
+  <div class="card" onclick="goArticle('biz')">
+    <div class="card-num">03</div>
+    <div class="card-cat">비즈니스 / BIZ</div>
+    <div class="card-title">기사 제목</div>
+    <div class="card-body">가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마.</div>
+    <div class="card-arrow">↗</div>
+  </div>
+</div>
+
+<!-- FEATURED -->
+<div class="sec-hd">
+  <div class="sec-hd-label">심층 분석 — FEATURED</div>
+  <div class="sec-hd-sub" onclick="goExternal('https://www.sedaily.com/')">더보기 →</div>
+</div>
+
+<div class="feat">
+  <div class="feat-main" onclick="goArticle('global')">
+    <div class="card-cat">DEEP DIVE</div>
+    <div class="card-title">기사 제목<br><em>자리입니다</em></div>
+    <div class="card-body">가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마. 바사아자 차카타파 하가나다 라마바사 아자차카.</div>
+  </div>
+  <div class="feat-side">
+    <div class="feat-side-item" onclick="goArticle('culture')">
+      <div class="card-num">04</div>
+      <div class="card-cat">컬처</div>
+      <div class="card-title">기사 제목</div>
+      <div class="card-body" style="font-size:11px;color:#666;">가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마.</div>
+    </div>
+    <div class="feat-side-item" style="background:#B8B8B8;" onclick="goArticle('opinion')">
+      <div class="card-num">05</div>
+      <div class="card-cat">오피니언</div>
+      <div class="card-title">기사 제목</div>
+      <div class="card-body" style="font-size:11px;color:#666;">가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마.</div>
+    </div>
+  </div>
+</div>
+
+<!-- QUOTE BAND -->
+<div class="quote-band">
+  <div class="quote-mark">"</div>
+  <div class="quote-body">
+    <div class="quote-text">가나다라 마바사아<br>자차카타 파하나다<br>라마바사 아자차카</div>
+    <div class="quote-attr">— 에디터 이름 · 직책</div>
+  </div>
+</div>
+
+<!-- BRIEF -->
+<div class="sec-hd" style="padding-top:28px;">
+  <div class="sec-hd-label">한줄 브리핑 — BRIEF</div>
+  <div class="sec-hd-sub" onclick="goExternal('https://www.sedaily.com/')">전체 →</div>
+</div>
+<div class="brief-wrap">
+  <div class="brief-grid">
+    <div class="brief-card" onclick="goExternal('https://www.sedaily.com/NewsView/2GBFLR1234')">
+      <div class="brief-n">06</div>
+      <div class="brief-title">기사 제목</div>
+      <div class="brief-body">가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마.</div>
+    </div>
+    <div class="brief-card" style="background:#CBCBCB;" onclick="goExternal('https://www.sedaily.com/NewsView/2GBFLR5678')">
+      <div class="brief-n">07</div>
+      <div class="brief-title">기사 제목</div>
+      <div class="brief-body">가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마.</div>
+    </div>
+    <div class="brief-card" onclick="goExternal('https://www.sedaily.com/NewsView/2GBFLR9012')">
+      <div class="brief-n">08</div>
+      <div class="brief-title">기사 제목</div>
+      <div class="brief-body">가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마.</div>
+    </div>
+    <div class="brief-card" style="background:#CBCBCB;" onclick="goExternal('https://www.sedaily.com/NewsView/2GBFLR3456')">
+      <div class="brief-n">09</div>
+      <div class="brief-title">기사 제목</div>
+      <div class="brief-body">가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="foot">
+  <div>
+    <div class="foot-logo">뉴스레터 제목</div>
+    <div class="foot-tag">CURATED FOR THE GENERATION</div>
+    <div class="foot-copy">© 2026 서울경제신문<br>
+      <a href="https://www.sedaily.com/unsubscribe" class="foot-link" style="display:inline;margin:0;">수신거부</a> ·
+      <a href="https://www.sedaily.com/privacy" class="foot-link" style="display:inline;margin:0;">개인정보처리방침</a>
+    </div>
+  </div>
+  <div>
+    <div class="foot-col-title">섹션</div>
+    <a href="https://www.sedaily.com/economy" class="foot-link">트렌드</a>
+    <a href="https://www.sedaily.com/it-science" class="foot-link">테크</a>
+    <a href="https://www.sedaily.com/culture" class="foot-link">컬처</a>
+    <a href="https://www.sedaily.com/industry" class="foot-link">비즈니스</a>
+  </div>
+  <div>
+    <div class="foot-col-title">정보</div>
+    <span class="foot-link" onclick="openModal()">구독 관리</span>
+    <a href="mailto:newsletter@sedaily.com" class="foot-link">광고 문의</a>
+    <a href="https://www.sedaily.com/terms" class="foot-link">이용약관</a>
+  </div>
+</footer>
+
+<script>
+// ── 시간 ──
+function updateTime(){
+  const now=new Date();
+  const h=String(now.getHours()).padStart(2,'0');
+  const m=String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('live-time').textContent=h+':'+m;
+}
+updateTime();setInterval(updateTime,10000);
+
+// ── 스크롤 프로그레스 바 ──
+window.addEventListener('scroll',()=>{
+  const pct=(window.scrollY/(document.body.scrollHeight-window.innerHeight))*100;
+  document.getElementById('progress').style.width=pct+'%';
+});
+
+// ── 구독 모달 ──
+function openModal(){document.getElementById('modal').classList.add('open');}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+function handleSubscribe(){
+  const v=document.getElementById('email-input').value;
+  if(!v||!v.includes('@')){alert('올바른 이메일 주소를 입력해 주세요.');return;}
+  closeModal();
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ── 내부 기사 이동 ──
+const articleMap={
+  'cover':'article_cover.html',
+  'trend':'article_trend.html',
+  'tech':'article_tech.html',
+  'biz':'article_biz.html',
+  'global':'article_global.html',
+  'culture':'article_culture.html',
+  'opinion':'article_opinion.html',
+};
+function goArticle(id){window.location.href=articleMap[id]||'#';}
+
+// ── 외부 링크 ──
+function goExternal(url){window.open(url,'_blank');}
+
+// ── 내비게이션 active ──
+function filterSection(sec){
+  document.querySelectorAll('.mast-nav-item').forEach(el=>el.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
