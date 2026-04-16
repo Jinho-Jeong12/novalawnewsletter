@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>뉴스레터 제목 — 기사</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600;1,9..144,700&family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+KR:wght@300;400;500;700&family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#FAFAF7;
+  --paper:#F5F0E8;
+  --paper-d:#EAE3D6;
+  --ink:#0C0C0A;
+  --ink2:#161614;
+  --ink3:#242422;
+  --navy:#0A1628;
+  --navy-l:#1B3870;
+  --navy-pale:#E8EDF8;
+  --red:#C83820;
+  --red-d:#A82E1A;
+  --gold:#A68840;
+  --gold-l:#C0A258;
+  --txt:#1A1A18;
+  --txt2:#5C5850;
+  --txt3:#9A958E;
+  --border:#DDD8CE;
+}
+body{background:var(--bg);font-family:'IBM Plex Sans KR',sans-serif;color:var(--txt);}
+
+/* ── HEADER ── */
+.site-header{
+  background:var(--ink);border-bottom:1px solid var(--ink3);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;height:56px;position:sticky;top:0;z-index:100;
+}
+.site-logo{
+  font-family:'Bebas Neue',sans-serif;font-size:28px;color:#F5F0E8;
+  cursor:pointer;letter-spacing:-.01em;text-decoration:none;
+}
+.header-nav{display:flex;gap:28px;align-items:center;}
+.header-nav a{
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:9px;font-weight:600;
+  letter-spacing:.16em;text-transform:uppercase;color:#3A3A38;
+  text-decoration:none;transition:color .2s;
+}
+.header-nav a:hover{color:#F0EDE6;}
+.back-btn{
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:9px;font-weight:600;
+  letter-spacing:.13em;text-transform:uppercase;color:#3A3A38;
+  cursor:pointer;border:1px solid var(--ink3);padding:8px 18px;
+  transition:all .22s;text-decoration:none;
+}
+.back-btn:hover{border-color:var(--navy-l);color:var(--navy-l);}
+
+/* ── PROGRESS ── */
+.progress{position:fixed;top:56px;left:0;height:3px;background:var(--navy-l);z-index:99;width:0%;transition:width .1s;}
+
+/* ── ARTICLE HERO ── */
+.art-hero{background:var(--ink);padding:72px 0 0;border-bottom:3px solid var(--ink3);}
+.art-hero-inner{max-width:860px;margin:0 auto;padding:0 48px;}
+.art-label{display:inline-flex;align-items:center;gap:12px;margin-bottom:28px;}
+.art-pill{
+  background:var(--navy);padding:5px 14px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:#fff;
+}
+.art-section{
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:9px;
+  letter-spacing:.16em;text-transform:uppercase;color:#5A5A58;
+}
+.art-hed{
+  font-family:'Bebas Neue',sans-serif;font-size:92px;line-height:.90;
+  letter-spacing:.01em;color:#F5F0E8;margin-bottom:28px;
+}
+.art-dek{
+  font-family:'Nanum Myeongjo',serif;font-size:17px;font-weight:400;
+  line-height:1.95;color:#686664;max-width:580px;margin-bottom:40px;
+}
+.art-meta{
+  display:flex;align-items:center;gap:0;
+  padding:20px 0;border-top:1px solid var(--ink3);
+}
+.art-meta-author{
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.13em;text-transform:uppercase;color:#686664;
+}
+.art-meta-dot{margin:0 14px;color:#3A3A38;font-size:10px;}
+.art-meta-time{font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;color:#4A4A48;}
+.art-meta-read{
+  margin-left:auto;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:9px;
+  letter-spacing:.13em;text-transform:uppercase;color:#4A4A48;
+}
+
+/* ── ARTICLE BODY ── */
+.art-body{max-width:740px;margin:0 auto;padding:64px 48px 96px;}
+.art-body p{
+  font-family:'Nanum Myeongjo',serif;font-size:18px;line-height:2.05;
+  color:#222220;margin-bottom:32px;
+}
+.art-body h2{
+  font-family:'Fraunces',serif;font-size:30px;font-weight:700;
+  font-style:italic;color:var(--ink);
+  margin:56px 0 24px;padding-bottom:16px;
+  border-bottom:2px solid var(--ink);
+}
+.art-body blockquote{
+  border-left:4px solid var(--navy);padding:24px 32px;
+  background:var(--paper);margin:40px 0;
+}
+.art-body blockquote p{
+  font-family:'Fraunces',serif;font-size:22px;font-weight:700;
+  font-style:italic;line-height:1.7;color:var(--ink);margin:0;
+}
+.art-body blockquote cite{
+  display:block;margin-top:14px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:600;
+  color:var(--navy-l);font-style:normal;letter-spacing:.12em;text-transform:uppercase;
+}
+
+/* ── SHARE ── */
+.art-share{
+  max-width:740px;margin:0 auto;padding:32px 48px 44px;
+  display:flex;align-items:center;gap:14px;border-top:2px solid var(--border);
+}
+.share-label{
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--txt3);
+}
+.share-btn{
+  border:1px solid var(--border);padding:9px 20px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:9px;font-weight:600;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--txt2);
+  cursor:pointer;transition:all .22s;background:none;
+}
+.share-btn:hover{border-color:var(--navy);color:var(--navy);}
+
+/* ── RELATED ── */
+.related{background:var(--ink);padding:56px 48px;border-top:3px solid var(--navy);}
+.related-title{
+  font-family:'Fraunces',serif;font-size:40px;font-weight:700;
+  font-style:italic;color:#F0EDE6;margin-bottom:28px;
+}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--ink3);}
+.related-card{
+  background:var(--ink2);padding:28px 24px;cursor:pointer;
+  position:relative;
+  border-top:2px solid transparent;transition:background .22s,border-top-color .22s;
+}
+.related-card:hover{background:#1E1E1C;border-top-color:var(--navy-l);}
+.rel-cat{
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:8px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:#5A5A58;margin-bottom:10px;
+}
+.rel-title{
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;
+  line-height:1.35;color:#DEDAD2;margin-bottom:12px;
+}
+.rel-arrow{font-size:16px;color:#3A3A38;transition:color .22s;}
+.related-card:hover .rel-arrow{color:var(--navy-pale);}
+
+/* ── ARTICLE FOOTER ── */
+.art-foot{
+  background:#0A0A08;padding:28px 48px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--ink3);
+}
+.art-foot-logo{font-family:'Bebas Neue',sans-serif;font-size:26px;color:#3A3A38;cursor:pointer;letter-spacing:-.01em;}
+.art-foot-copy{font-family:'IBM Plex Sans KR',sans-serif;font-size:10px;font-weight:300;color:#3A3A38;letter-spacing:.06em;}
+.art-foot-sub{
+  border:1px solid var(--ink3);padding:9px 20px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:9px;font-weight:600;
+  letter-spacing:.13em;text-transform:uppercase;color:#4A4A48;
+  cursor:pointer;transition:all .22s;
+}
+.art-foot-sub:hover{border-color:var(--navy-l);color:var(--navy-pale);}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:36px;right:36px;background:var(--navy);color:#fff;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  padding:14px 22px;opacity:0;transform:translateY(10px);
+  transition:opacity .3s,transform .3s;z-index:200;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="toast" id="toast">링크가 복사됐습니다</div>
+
+<header class="site-header">
+  <a class="site-logo" href="newsletter_main.html">뉴스레터 제목</a>
+  <nav class="header-nav">
+    <a href="newsletter_main.html">트렌드</a>
+    <a href="newsletter_main.html">테크</a>
+    <a href="newsletter_main.html">컬처</a>
+    <a href="newsletter_main.html">비즈니스</a>
+  </nav>
+  <a class="back-btn" href="newsletter_main.html">← 뉴스레터로</a>
+</header>
+
+<main id="article-root"></main>
+
+<script>
+window.addEventListener('scroll',function(){
+  var pct=(window.scrollY/(document.body.scrollHeight-window.innerHeight))*100;
+  document.getElementById('progress').style.width=pct+'%';
+});
+
+var P1='가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마. 바사아자 차카타파 하가나다 라마바사 아자차카 타파하가. 나다라마 바사아자 차카타파 하가나다 라마바사. 아자차카 타파하가 나다라마 바사아자 차카타파 하가나다.';
+var P2='가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마. 바사아자 차카타파 하가나다 라마바사 아자차카. 타파하가 나다라마 바사아자 차카타파 하가나다 라마바사. 아자차카 타파하가 나다라마.';
+var P3='가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마. 바사아자 차카타파 하가나다 라마바사. 아자차카 타파하가 나다라마 바사아자 차카타파.';
+var P4='바사아자 차카타파 하가나다 라마바사. 아자차카 타파하가 나다라마 바사아자 차카타파 하가나다 라마바사. 가나다라 마바사아 자차카타 파하나다 라마바사 아자차카 타파하가 나다라마.';
+var P5='가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마. 바사아자 차카타파 하가나다 라마바사 아자차카 타파하가 나다라마. 가나다라 마바사아 자차카타 파하나다 라마바사 아자차카.';
+var DEK='가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마. 바사아자 차카타파 하가나다 라마바사 아자차카.';
+var BODY='<p>'+P1+'</p><h2>소제목 가나다라</h2><p>'+P2+'</p><p>'+P3+'</p><blockquote><p>"가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마."</p><cite>— 가나다 라마바 · 사아자차</cite></blockquote><p>'+P4+'</p><h2>소제목 마바사아</h2><p>'+P5+'</p><p>'+P1+'</p><p>'+P3+'</p>';
+
+var articles={
+  cover:  {pill:'COVER STORY',section:'경제',  hed:'기사 제목<br>자리입니다',dek:DEK,author:'기자 이름',date:'2026.04.07',readTime:'7 MIN READ',body:BODY,related:[{cat:'테크',    title:'기사 제목',id:'tech'},  {cat:'비즈니스',title:'기사 제목',id:'biz'},   {cat:'글로벌',  title:'기사 제목',id:'global'}]},
+  trend:  {pill:'트렌드',     section:'TREND', hed:'기사 제목<br>자리입니다',dek:DEK,author:'기자 이름',date:'2026.04.07',readTime:'5 MIN READ',body:BODY,related:[{cat:'컬처',    title:'기사 제목',id:'culture'},{cat:'비즈니스',title:'기사 제목',id:'biz'},   {cat:'오피니언',title:'기사 제목',id:'opinion'}]},
+  tech:   {pill:'테크',       section:'TECH',  hed:'기사 제목<br>자리입니다',dek:DEK,author:'기자 이름',date:'2026.04.07',readTime:'6 MIN READ',body:BODY,related:[{cat:'경제',    title:'기사 제목',id:'cover'}, {cat:'글로벌',  title:'기사 제목',id:'global'},{cat:'비즈니스',title:'기사 제목',id:'biz'}]},
+  biz:    {pill:'비즈니스',   section:'BIZ',   hed:'기사 제목<br>자리입니다',dek:DEK,author:'기자 이름',date:'2026.04.07',readTime:'5 MIN READ',body:BODY,related:[{cat:'테크',    title:'기사 제목',id:'tech'},  {cat:'트렌드',  title:'기사 제목',id:'trend'}, {cat:'오피니언',title:'기사 제목',id:'opinion'}]},
+  global: {pill:'글로벌',     section:'GLOBAL',hed:'기사 제목<br>자리입니다',dek:DEK,author:'기자 이름',date:'2026.04.07',readTime:'8 MIN READ',body:BODY,related:[{cat:'경제',    title:'기사 제목',id:'cover'}, {cat:'테크',    title:'기사 제목',id:'tech'},  {cat:'오피니언',title:'기사 제목',id:'opinion'}]},
+  culture:{pill:'컬처',       section:'CULTURE',hed:'기사 제목<br>자리입니다',dek:DEK,author:'기자 이름',date:'2026.04.07',readTime:'4 MIN READ',body:BODY,related:[{cat:'트렌드',  title:'기사 제목',id:'trend'}, {cat:'비즈니스',title:'기사 제목',id:'biz'},   {cat:'오피니언',title:'기사 제목',id:'opinion'}]},
+  opinion:{pill:'오피니언',   section:'OPINION',hed:'기사 제목<br>자리입니다',dek:DEK,author:'기자 이름',date:'2026.04.07',readTime:'4 MIN READ',body:BODY,related:[{cat:'경제',    title:'기사 제목',id:'cover'}, {cat:'글로벌',  title:'기사 제목',id:'global'},{cat:'비즈니스',title:'기사 제목',id:'biz'}]}
+};
+
+function getArticleId(){
+  var fn=location.pathname.split('/').pop().replace('.html','');
+  var map={article_cover:'cover',article_trend:'trend',article_tech:'tech',article_biz:'biz',article_global:'global',article_culture:'culture',article_opinion:'opinion'};
+  return map[fn]||'cover';
+}
+
+function renderArticle(id){
+  var a=articles[id];
+  if(!a)return;
+  document.title='뉴스레터 제목 — 기사 제목';
+  window.scrollTo(0,0);
+  document.getElementById('article-root').innerHTML=
+    '<div class="art-hero">'
+    +'<div class="art-hero-inner">'
+    +'<div class="art-label"><span class="art-pill">'+a.pill+'</span><span class="art-section">'+a.section+'</span></div>'
+    +'<div class="art-hed">'+a.hed+'</div>'
+    +'<div class="art-dek">'+a.dek+'</div>'
+    +'<div class="art-meta">'
+    +'<span class="art-meta-author">'+a.author+'</span>'
+    +'<span class="art-meta-dot">·</span>'
+    +'<span class="art-meta-time">'+a.date+'</span>'
+    +'<span class="art-meta-read">'+a.readTime+'</span>'
+    +'</div>'
+    +'</div>'
+    +'</div>'
+    +'<div class="art-body">'+a.body+'</div>'
+    +'<div class="art-share">'
+    +'<span class="share-label">공유</span>'
+    +'<button class="share-btn" onclick="copyLink()">링크 복사</button>'
+    +'<button class="share-btn" onclick="window.open(\'https://twitter.com/intent/tweet?url=\'+encodeURIComponent(location.href),\'_blank\')">X (Twitter)</button>'
+    +'</div>'
+    +'<div class="related">'
+    +'<div class="related-title">관련 기사</div>'
+    +'<div class="related-grid">'
+    +a.related.map(function(r){
+      return '<div class="related-card" onclick="renderArticle(\''+r.id+'\')"><div class="rel-cat">'+r.cat+'</div><div class="rel-title">'+r.title+'</div><div class="rel-arrow">↗</div></div>';
+    }).join('')
+    +'</div></div>'
+    +'<footer class="art-foot">'
+    +'<div class="art-foot-logo" onclick="location.href=\'newsletter_main.html\'">뉴스레터 제목</div>'
+    +'<div class="art-foot-copy">© 2026 뉴스레터 제목</div>'
+    +'<div class="art-foot-sub" onclick="location.href=\'newsletter_main.html\'">뉴스레터 구독 →</div>'
+    +'</footer>';
+}
+
+function copyLink(){
+  navigator.clipboard.writeText(location.href).then(function(){
+    var t=document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(function(){t.classList.remove('show');},2500);
+  });
+}
+
+renderArticle(getArticleId());
+</script>
+</body>
+</html>
