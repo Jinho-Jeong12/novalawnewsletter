@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova 관리자 — 글쓰기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#F0F2F5;
+  --surface:#FFFFFF;
+  --surface-2:#F6F9FC;
+  --navy:#0A1628;
+  --navy-l:#1B3870;
+  --navy-pale:#ECF0F9;
+  --red:#C83820;
+  --red-d:#A82E1A;
+  --green:#1a7a4a;
+  --green-d:#155e39;
+  --ink:#0D1829;
+  --txt:#1E2A3B;
+  --txt2:#4B5A6B;
+  --txt3:#8FA0B4;
+  --border:#D6E0EC;
+  --border-l:#EEF2F7;
+  --sh:0 1px 3px rgba(15,35,71,.06),0 4px 14px rgba(15,35,71,.05);
+  --sh2:0 4px 16px rgba(15,35,71,.12),0 2px 6px rgba(15,35,71,.06);
+  --sidebar-w:260px;
+  --topbar-h:54px;
+}
+body{background:var(--bg);font-family:'Noto Sans KR','Inter',sans-serif;color:var(--txt);height:100vh;overflow:hidden;display:flex;flex-direction:column;}
+
+/* ── TOP BAR ── */
+.topbar{
+  height:var(--topbar-h);background:var(--navy);
+  display:flex;align-items:center;padding:0 20px;
+  gap:16px;flex-shrink:0;z-index:200;
+  box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+.topbar-logo{
+  font-family:'Inter',sans-serif;font-size:14px;font-weight:800;
+  color:#fff;letter-spacing:-.02em;cursor:pointer;text-decoration:none;
+  display:flex;align-items:center;gap:10px;
+}
+.topbar-logo::after{
+  content:'ADMIN';font-size:8px;font-weight:700;letter-spacing:.18em;
+  background:var(--red);color:#fff;padding:2px 7px;
+}
+.topbar-sep{width:1px;height:20px;background:rgba(255,255,255,.12);}
+.topbar-toggle{
+  background:none;border:none;color:rgba(255,255,255,.6);
+  cursor:pointer;font-size:18px;padding:4px 6px;transition:color .2s;
+  display:flex;align-items:center;
+}
+.topbar-toggle:hover{color:#fff;}
+.topbar-title-display{
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:500;
+  color:rgba(255,255,255,.55);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.topbar-actions{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.topbar-btn{
+  padding:7px 16px;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
+  border:none;transition:all .2s;
+}
+.topbar-btn.ghost{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);}
+.topbar-btn.ghost:hover{background:rgba(255,255,255,.2);color:#fff;}
+.topbar-btn.draft{background:rgba(255,255,255,.12);color:#fff;}
+.topbar-btn.draft:hover{background:rgba(255,255,255,.22);}
+.topbar-btn.publish{background:var(--green);color:#fff;}
+.topbar-btn.publish:hover{background:var(--green-d);}
+.topbar-btn.preview{background:rgba(255,255,255,.08);color:rgba(255,255,255,.75);}
+.topbar-btn.preview:hover{background:rgba(255,255,255,.15);color:#fff;}
+.auto-save-badge{
+  font-family:'Inter',sans-serif;font-size:9px;letter-spacing:.08em;
+  color:rgba(255,255,255,.35);display:flex;align-items:center;gap:5px;
+}
+.auto-save-dot{width:5px;height:5px;border-radius:50%;background:var(--green);opacity:.7;}
+
+/* ── MAIN LAYOUT ── */
+.workspace{display:flex;flex:1;overflow:hidden;}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-w);background:var(--surface);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  transition:width .25s,opacity .25s;
+  overflow:hidden;flex-shrink:0;
+}
+.sidebar.collapsed{width:0;opacity:0;}
+.sidebar-hd{
+  padding:16px 18px 12px;border-bottom:1px solid var(--border-l);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sidebar-hd-title{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--txt3);
+}
+.sidebar-new-btn{
+  background:var(--navy);border:none;color:#fff;
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.1em;padding:5px 11px;cursor:pointer;
+  transition:background .2s;
+}
+.sidebar-new-btn:hover{background:var(--navy-l);}
+.sidebar-list{flex:1;overflow-y:auto;padding:8px 0;}
+.sidebar-item{
+  padding:12px 18px;cursor:pointer;
+  border-left:3px solid transparent;
+  transition:background .15s,border-color .15s;
+  position:relative;
+}
+.sidebar-item:hover{background:var(--surface-2);}
+.sidebar-item.active{background:var(--navy-pale);border-left-color:var(--navy);}
+.sidebar-item-title{
+  font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:700;
+  color:var(--ink);margin-bottom:4px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.sidebar-item-meta{
+  font-family:'Inter',sans-serif;font-size:10px;color:var(--txt3);
+  display:flex;align-items:center;gap:8px;
+}
+.sidebar-item-pill{
+  font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:1px 6px;background:var(--navy-pale);color:var(--navy-l);
+}
+.sidebar-item-pill.published{background:#e8f5ee;color:var(--green);}
+.sidebar-item-del{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:none;border:none;color:var(--txt3);cursor:pointer;
+  font-size:12px;opacity:0;transition:opacity .15s,color .15s;padding:4px;
+}
+.sidebar-item:hover .sidebar-item-del{opacity:1;}
+.sidebar-item-del:hover{color:var(--red);}
+.sidebar-empty{
+  padding:32px 18px;text-align:center;
+  font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:300;color:var(--txt3);
+}
+
+/* ── EDITOR MAIN ── */
+.editor-main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+
+/* ── META PANEL ── */
+.meta-panel{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:18px 28px;flex-shrink:0;
+}
+.meta-row{display:flex;gap:16px;align-items:flex-start;margin-bottom:12px;}
+.meta-row:last-child{margin-bottom:0;}
+.meta-field{display:flex;flex-direction:column;gap:5px;flex:1;}
+.meta-field.grow-2{flex:2;}
+.meta-field.grow-3{flex:3;}
+.meta-label{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--txt3);
+}
+.meta-input{
+  background:var(--surface-2);border:1px solid var(--border);
+  padding:9px 12px;font-family:'Noto Sans KR',sans-serif;font-size:13px;
+  color:var(--ink);outline:none;transition:border-color .2s;width:100%;
+}
+.meta-input:focus{border-color:var(--navy);}
+.meta-input::placeholder{color:var(--txt3);}
+.meta-select{
+  background:var(--surface-2);border:1px solid var(--border);
+  padding:9px 12px;font-family:'Noto Sans KR',sans-serif;font-size:13px;
+  color:var(--ink);outline:none;cursor:pointer;width:100%;
+  appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238FA0B4'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;
+}
+.meta-select:focus{border-color:var(--navy);}
+.meta-title-input{
+  background:transparent;border:none;border-bottom:2px solid var(--border);
+  padding:8px 0;font-family:'Noto Serif KR',serif;font-size:22px;font-weight:700;
+  color:var(--ink);outline:none;width:100%;transition:border-color .2s;
+}
+.meta-title-input:focus{border-bottom-color:var(--navy);}
+.meta-title-input::placeholder{color:var(--border);}
+
+/* cover image */
+.cover-upload-area{
+  border:2px dashed var(--border);padding:14px 16px;
+  display:flex;align-items:center;gap:12px;cursor:pointer;
+  transition:border-color .2s,background .2s;
+}
+.cover-upload-area:hover{border-color:var(--navy);background:var(--navy-pale);}
+.cover-upload-area.has-img{border-style:solid;border-color:var(--navy);}
+.cover-thumb{width:64px;height:48px;object-fit:cover;display:none;border:1px solid var(--border);}
+.cover-thumb.show{display:block;}
+.cover-placeholder{
+  width:64px;height:48px;background:var(--navy-pale);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;color:var(--txt3);
+}
+.cover-placeholder.hide{display:none;}
+.cover-info{flex:1;}
+.cover-info-text{
+  font-family:'Noto Sans KR',sans-serif;font-size:12px;color:var(--txt2);
+  margin-bottom:4px;
+}
+.cover-info-sub{font-family:'Inter',sans-serif;font-size:10px;color:var(--txt3);}
+.cover-btns{display:flex;gap:8px;margin-top:8px;}
+.cover-btn{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;padding:5px 10px;cursor:pointer;border:none;
+  background:var(--navy-pale);color:var(--navy-l);transition:all .2s;
+}
+.cover-btn:hover{background:var(--navy);color:#fff;}
+.cover-btn.remove{background:transparent;border:1px solid var(--border);color:var(--txt3);}
+.cover-btn.remove:hover{background:var(--red);border-color:var(--red);color:#fff;}
+
+/* ── EDITOR AREA ── */
+.editor-area{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
+.toolbar-wrap{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  flex-shrink:0;position:sticky;top:0;z-index:10;
+}
+.toolbar{
+  display:flex;align-items:center;flex-wrap:wrap;gap:2px;
+  padding:7px 14px;
+}
+.toolbar-sep{width:1px;height:22px;background:var(--border);margin:0 4px;flex-shrink:0;}
+.tb-btn{
+  background:none;border:none;cursor:pointer;
+  width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:var(--txt2);border-radius:3px;
+  transition:background .15s,color .15s;flex-shrink:0;
+  position:relative;
+}
+.tb-btn:hover{background:var(--navy-pale);color:var(--navy);}
+.tb-btn.active{background:var(--navy);color:#fff;}
+.tb-btn[title]:hover::after{
+  content:attr(title);position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;font-family:'Inter',sans-serif;font-size:10px;
+  padding:3px 8px;white-space:nowrap;z-index:100;pointer-events:none;
+}
+.tb-select{
+  background:var(--surface-2);border:1px solid var(--border);
+  padding:4px 6px;font-family:'Noto Sans KR',sans-serif;font-size:11px;
+  color:var(--txt);outline:none;cursor:pointer;border-radius:2px;
+  height:28px;
+}
+.tb-select:focus{border-color:var(--navy);}
+.tb-color-wrap{position:relative;width:28px;height:28px;}
+.tb-color-btn{
+  width:28px;height:28px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1px;
+  cursor:pointer;border:none;background:none;border-radius:3px;
+  transition:background .15s;padding:0;
+}
+.tb-color-btn:hover{background:var(--navy-pale);}
+.tb-color-icon{font-size:13px;color:var(--txt2);line-height:1;}
+.tb-color-bar{width:18px;height:3px;border-radius:1px;}
+.tb-color-input{position:absolute;width:100%;height:100%;opacity:0;cursor:pointer;top:0;left:0;}
+
+/* editor scroll */
+.editor-scroll{flex:1;overflow-y:auto;padding:40px 0;}
+.editor-paper{
+  background:var(--surface);
+  max-width:800px;margin:0 auto;
+  min-height:600px;
+  box-shadow:var(--sh2);
+  padding:60px 72px;
+  position:relative;
+}
+#editor-content{
+  outline:none;min-height:480px;
+  font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:400;
+  line-height:1.95;color:var(--ink);
+  word-break:break-word;
+}
+#editor-content:empty::before{
+  content:'여기에 내용을 작성하세요...';
+  color:var(--txt3);pointer-events:none;
+}
+#editor-content h1{font-family:'Noto Serif KR',serif;font-size:32px;font-weight:700;line-height:1.3;margin:28px 0 14px;color:var(--ink);}
+#editor-content h2{font-family:'Noto Serif KR',serif;font-size:24px;font-weight:700;line-height:1.4;margin:24px 0 12px;color:var(--ink);}
+#editor-content h3{font-family:'Noto Sans KR',sans-serif;font-size:18px;font-weight:700;line-height:1.5;margin:20px 0 10px;color:var(--ink);}
+#editor-content h4{font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:700;line-height:1.6;margin:16px 0 8px;color:var(--ink);}
+#editor-content p{margin:0 0 12px;}
+#editor-content blockquote{
+  border-left:4px solid var(--navy);padding:14px 20px;margin:20px 0;
+  background:var(--navy-pale);color:var(--txt2);
+  font-style:italic;font-size:14px;line-height:1.9;
+}
+#editor-content pre{
+  background:var(--ink);color:#e8f0fe;
+  padding:18px 22px;margin:16px 0;
+  font-family:'Courier New',monospace;font-size:13px;line-height:1.7;
+  overflow-x:auto;border-radius:2px;
+}
+#editor-content code{
+  background:var(--navy-pale);color:var(--navy-l);
+  padding:2px 6px;font-family:'Courier New',monospace;font-size:13px;border-radius:2px;
+}
+#editor-content pre code{background:none;color:inherit;padding:0;}
+#editor-content ul,#editor-content ol{padding-left:28px;margin:8px 0 12px;}
+#editor-content li{margin-bottom:6px;line-height:1.85;}
+#editor-content a{color:var(--navy-l);text-decoration:underline;}
+#editor-content a:hover{color:var(--red);}
+#editor-content hr{border:none;border-top:2px solid var(--border);margin:28px 0;}
+#editor-content img{max-width:100%;height:auto;display:block;margin:16px auto;box-shadow:var(--sh);}
+#editor-content table{border-collapse:collapse;width:100%;margin:16px 0;}
+#editor-content th,#editor-content td{
+  border:1px solid var(--border);padding:10px 14px;
+  font-size:13px;text-align:left;
+}
+#editor-content th{background:var(--navy);color:#fff;font-weight:700;}
+#editor-content tr:nth-child(even) td{background:var(--surface-2);}
+.word-count{
+  position:absolute;bottom:16px;right:20px;
+  font-family:'Inter',sans-serif;font-size:10px;color:var(--txt3);
+  letter-spacing:.06em;
+}
+
+/* ── SOURCE VIEW ── */
+.source-textarea{
+  width:100%;flex:1;resize:none;outline:none;
+  font-family:'Courier New',monospace;font-size:13px;line-height:1.7;
+  color:var(--ink);background:var(--surface);border:none;
+  padding:60px 72px;max-width:800px;margin:0 auto;display:block;
+  min-height:600px;box-shadow:var(--sh2);
+}
+
+/* ── MODALS ── */
+.mini-modal-bg{
+  display:none;position:fixed;inset:0;background:rgba(6,13,24,.7);
+  z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(6px);
+}
+.mini-modal-bg.open{display:flex;}
+.mini-modal-box{
+  background:var(--surface);width:440px;
+  box-shadow:0 20px 60px rgba(6,13,24,.25);
+  border-top:3px solid var(--navy);animation:fadeUp .25s ease;
+}
+.mini-modal-hd{
+  background:var(--navy);padding:16px 22px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.mini-modal-title{
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.7);
+}
+.mini-modal-close{
+  background:none;border:none;color:rgba(255,255,255,.4);
+  font-size:13px;cursor:pointer;transition:color .2s;
+}
+.mini-modal-close:hover{color:#fff;}
+.mini-modal-body{padding:22px;}
+.mini-label{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--txt3);
+  display:block;margin-bottom:5px;
+}
+.mini-input{
+  width:100%;background:var(--surface-2);border:1px solid var(--border);
+  padding:9px 12px;font-family:'Noto Sans KR',sans-serif;font-size:13px;
+  color:var(--ink);outline:none;transition:border-color .2s;margin-bottom:14px;
+}
+.mini-input:focus{border-color:var(--navy);}
+.mini-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px;}
+.mini-btn{
+  padding:8px 18px;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border:none;
+  transition:all .2s;
+}
+.mini-btn.cancel{background:var(--surface-2);color:var(--txt2);}
+.mini-btn.cancel:hover{background:var(--border);}
+.mini-btn.ok{background:var(--navy);color:#fff;}
+.mini-btn.ok:hover{background:var(--navy-l);}
+
+/* tab style inside modal */
+.mini-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:16px;}
+.mini-tab{
+  padding:8px 16px;font-family:'Inter',sans-serif;font-size:10px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);
+  cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;
+}
+.mini-tab.active{color:var(--navy);border-bottom-color:var(--navy);}
+.mini-tab-panel{display:none;}
+.mini-tab-panel.active{display:block;}
+
+/* table builder */
+.table-grid{display:grid;grid-template-columns:repeat(8,24px);gap:3px;margin-bottom:10px;}
+.table-cell-pick{
+  width:24px;height:24px;border:1px solid var(--border);cursor:pointer;
+  transition:background .1s,border-color .1s;background:var(--surface-2);
+}
+.table-cell-pick.sel{background:var(--navy-pale);border-color:var(--navy);}
+.table-pick-label{font-family:'Inter',sans-serif;font-size:10px;color:var(--txt3);}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:24px;right:24px;
+  background:var(--navy);color:#fff;
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:11px 18px;opacity:0;transform:translateY(10px);
+  transition:opacity .3s,transform .3s;z-index:1001;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.success{background:var(--green);}
+
+/* ── PREVIEW OVERLAY ── */
+.preview-overlay{
+  display:none;position:fixed;inset:0;background:var(--bg);
+  z-index:300;overflow-y:auto;
+}
+.preview-overlay.open{display:block;}
+.preview-bar{
+  position:sticky;top:0;background:var(--navy);
+  padding:12px 24px;display:flex;align-items:center;gap:16px;z-index:10;
+}
+.preview-bar-label{
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);
+}
+.preview-close-btn{
+  margin-left:auto;background:rgba(255,255,255,.12);border:none;
+  color:#fff;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;padding:7px 16px;cursor:pointer;
+  transition:background .2s;
+}
+.preview-close-btn:hover{background:rgba(255,255,255,.22);}
+.preview-content{max-width:760px;margin:48px auto;padding:0 24px 80px;}
+.preview-cover{width:100%;max-height:360px;object-fit:cover;margin-bottom:32px;display:none;}
+.preview-cover.show{display:block;}
+.preview-pill{
+  display:inline-block;background:var(--navy);padding:4px 12px;
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:#fff;margin-bottom:14px;
+}
+.preview-hed{
+  font-family:'Noto Serif KR',serif;font-size:36px;font-weight:700;
+  line-height:1.25;color:var(--ink);margin-bottom:14px;
+}
+.preview-dek{
+  font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:300;
+  line-height:1.9;color:var(--txt2);margin-bottom:20px;
+}
+.preview-meta{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Inter',sans-serif;font-size:11px;color:var(--txt3);
+  margin-bottom:36px;padding-bottom:24px;border-bottom:2px solid var(--navy);
+}
+.preview-meta-sep{width:1px;height:12px;background:var(--border);}
+.preview-body{
+  font-family:'Noto Sans KR',sans-serif;font-size:15px;line-height:1.95;color:var(--ink);
+}
+.preview-body h1{font-family:'Noto Serif KR',serif;font-size:32px;font-weight:700;line-height:1.3;margin:28px 0 14px;}
+.preview-body h2{font-family:'Noto Serif KR',serif;font-size:24px;font-weight:700;margin:24px 0 12px;}
+.preview-body h3{font-size:18px;font-weight:700;margin:20px 0 10px;}
+.preview-body blockquote{border-left:4px solid var(--navy);padding:14px 20px;margin:20px 0;background:var(--navy-pale);font-style:italic;color:var(--txt2);}
+.preview-body pre{background:var(--ink);color:#e8f0fe;padding:18px 22px;margin:16px 0;font-family:'Courier New',monospace;font-size:13px;overflow-x:auto;}
+.preview-body img{max-width:100%;height:auto;display:block;margin:16px auto;}
+.preview-body table{border-collapse:collapse;width:100%;margin:16px 0;}
+.preview-body th,.preview-body td{border:1px solid var(--border);padding:10px 14px;font-size:13px;}
+.preview-body th{background:var(--navy);color:#fff;}
+.preview-body hr{border:none;border-top:2px solid var(--border);margin:28px 0;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <a class="topbar-logo" href="index.html">Nova</a>
+  <div class="topbar-sep"></div>
+  <button class="topbar-toggle" onclick="toggleSidebar()" title="기사 목록">☰</button>
+  <div class="topbar-title-display" id="topbar-title">새 글</div>
+  <div class="topbar-actions">
+    <div class="auto-save-badge" id="auto-save-badge" style="display:none;">
+      <div class="auto-save-dot"></div>자동저장됨
+    </div>
+    <button class="topbar-btn preview" onclick="openPreview()">미리보기</button>
+    <button class="topbar-btn draft" onclick="saveDraft()">임시저장</button>
+    <button class="topbar-btn publish" onclick="publishArticle()">발행 →</button>
+    <div class="topbar-sep"></div>
+    <button class="topbar-btn ghost" onclick="logout()">로그아웃</button>
+  </div>
+</div>
+
+<div class="workspace">
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-hd">
+      <div class="sidebar-hd-title">작성된 글</div>
+      <button class="sidebar-new-btn" onclick="newArticle()">+ 새 글</button>
+    </div>
+    <div class="sidebar-list" id="sidebar-list"></div>
+  </div>
+
+  <!-- EDITOR MAIN -->
+  <div class="editor-main">
+    <!-- META PANEL -->
+    <div class="meta-panel">
+      <input class="meta-title-input" id="meta-title" type="text" placeholder="제목을 입력하세요" oninput="onTitleChange(this.value)">
+      <div style="height:12px;"></div>
+      <div class="meta-row">
+        <div class="meta-field">
+          <div class="meta-label">섹션</div>
+          <select class="meta-select" id="meta-section"></select>
+        </div>
+        <div class="meta-field grow-2">
+          <div class="meta-label">저자</div>
+          <input class="meta-input" id="meta-author" type="text" placeholder="기자 이름">
+        </div>
+        <div class="meta-field">
+          <div class="meta-label">날짜</div>
+          <input class="meta-input" id="meta-date" type="date">
+        </div>
+      </div>
+      <div class="meta-row">
+        <div class="meta-field grow-3">
+          <div class="meta-label">요약 (DEK)</div>
+          <input class="meta-input" id="meta-dek" type="text" placeholder="기사 요약문을 입력하세요">
+        </div>
+        <div class="meta-field grow-2">
+          <div class="meta-label">커버 이미지</div>
+          <div class="cover-upload-area" id="cover-area" onclick="triggerCoverUpload()">
+            <div class="cover-placeholder" id="cover-placeholder">🖼</div>
+            <img class="cover-thumb" id="cover-thumb" src="" alt="커버">
+            <div class="cover-info">
+              <div class="cover-info-text" id="cover-info-text">이미지를 업로드하거나 URL을 입력하세요</div>
+              <div class="cover-btns">
+                <button class="cover-btn" onclick="event.stopPropagation();triggerCoverUpload()">업로드</button>
+                <button class="cover-btn" onclick="event.stopPropagation();setCoverUrl()">URL</button>
+                <button class="cover-btn remove" id="cover-remove-btn" onclick="event.stopPropagation();removeCover()" style="display:none;">제거</button>
+              </div>
+            </div>
+          </div>
+          <input type="file" id="cover-file-input" accept="image/*" style="display:none" onchange="handleCoverFile(event)">
+        </div>
+      </div>
+    </div>
+
+    <!-- EDITOR AREA -->
+    <div class="editor-area">
+      <!-- TOOLBAR -->
+      <div class="toolbar-wrap">
+        <div class="toolbar" id="toolbar">
+          <!-- History -->
+          <button class="tb-btn" onclick="cmd('undo')" title="실행 취소">↩</button>
+          <button class="tb-btn" onclick="cmd('redo')" title="다시 실행">↪</button>
+          <div class="toolbar-sep"></div>
+
+          <!-- Style selects -->
+          <select class="tb-select" onchange="applyHeading(this.value);this.value=''" title="문단 스타일">
+            <option value="">문단 스타일</option>
+            <option value="p">본문</option>
+            <option value="h1">제목 1</option>
+            <option value="h2">제목 2</option>
+            <option value="h3">제목 3</option>
+            <option value="h4">제목 4</option>
+            <option value="blockquote">인용구</option>
+            <option value="pre">코드 블록</option>
+          </select>
+          <select class="tb-select" onchange="applyFont(this.value)" id="font-select" title="글꼴">
+            <option value="'Noto Sans KR',sans-serif">Noto Sans</option>
+            <option value="'Noto Serif KR',serif">Noto Serif</option>
+            <option value="'Inter',sans-serif">Inter</option>
+            <option value="'Courier New',monospace">Courier</option>
+            <option value="굴림,sans-serif">굴림</option>
+            <option value="돋움,sans-serif">돋움</option>
+            <option value="바탕,serif">바탕</option>
+          </select>
+          <select class="tb-select" onchange="applyFontSize(this.value)" title="글자 크기" style="width:64px;">
+            <option value="">크기</option>
+            <option value="1">10</option>
+            <option value="2">12</option>
+            <option value="3">14</option>
+            <option value="4">16</option>
+            <option value="5">18</option>
+            <option value="6">24</option>
+            <option value="7">32</option>
+          </select>
+          <div class="toolbar-sep"></div>
+
+          <!-- Format -->
+          <button class="tb-btn" onclick="cmd('bold')" title="굵게 (Ctrl+B)" id="btn-bold"><b>B</b></button>
+          <button class="tb-btn" onclick="cmd('italic')" title="기울임 (Ctrl+I)" id="btn-italic"><i>I</i></button>
+          <button class="tb-btn" onclick="cmd('underline')" title="밑줄 (Ctrl+U)" id="btn-underline"><u>U</u></button>
+          <button class="tb-btn" onclick="cmd('strikeThrough')" title="취소선" id="btn-strike"><s>S</s></button>
+          <div class="toolbar-sep"></div>
+
+          <!-- Colors -->
+          <div class="tb-color-wrap" title="글자 색">
+            <button class="tb-color-btn">
+              <span class="tb-color-icon">A</span>
+              <span class="tb-color-bar" id="txt-color-bar" style="background:#0A1628;"></span>
+            </button>
+            <input type="color" class="tb-color-input" value="#0A1628" onchange="applyColor(this.value,'foreColor');document.getElementById('txt-color-bar').style.background=this.value;">
+          </div>
+          <div class="tb-color-wrap" title="형광펜">
+            <button class="tb-color-btn">
+              <span class="tb-color-icon" style="font-size:11px;">▌</span>
+              <span class="tb-color-bar" id="hl-color-bar" style="background:#FFE066;"></span>
+            </button>
+            <input type="color" class="tb-color-input" value="#FFE066" onchange="applyColor(this.value,'hiliteColor');document.getElementById('hl-color-bar').style.background=this.value;">
+          </div>
+          <div class="toolbar-sep"></div>
+
+          <!-- Align -->
+          <button class="tb-btn" onclick="cmd('justifyLeft')" title="왼쪽 정렬">⬅</button>
+          <button class="tb-btn" onclick="cmd('justifyCenter')" title="가운데 정렬">↔</button>
+          <button class="tb-btn" onclick="cmd('justifyRight')" title="오른쪽 정렬">➡</button>
+          <button class="tb-btn" onclick="cmd('justifyFull')" title="양쪽 정렬">⇔</button>
+          <div class="toolbar-sep"></div>
+
+          <!-- Lists -->
+          <button class="tb-btn" onclick="cmd('insertUnorderedList')" title="글머리 기호">• —</button>
+          <button class="tb-btn" onclick="cmd('insertOrderedList')" title="번호 목록">1.</button>
+          <button class="tb-btn" onclick="cmd('outdent')" title="내어쓰기">⇤</button>
+          <button class="tb-btn" onclick="cmd('indent')" title="들여쓰기">⇥</button>
+          <div class="toolbar-sep"></div>
+
+          <!-- Insert -->
+          <button class="tb-btn" onclick="openLinkModal()" title="링크 삽입">🔗</button>
+          <button class="tb-btn" onclick="openImgModal()" title="이미지 삽입">🖼</button>
+          <button class="tb-btn" onclick="openTableModal()" title="표 삽입">⊞</button>
+          <button class="tb-btn" onclick="insertHR()" title="구분선">—</button>
+          <div class="toolbar-sep"></div>
+
+          <!-- Extras -->
+          <button class="tb-btn" onclick="cmd('removeFormat')" title="서식 제거">Tx</button>
+          <button class="tb-btn" id="btn-source" onclick="toggleSource()" title="HTML 소스">‹›</button>
+        </div>
+      </div>
+
+      <!-- EDITOR SCROLL -->
+      <div class="editor-scroll">
+        <div class="editor-paper">
+          <div id="editor-content" contenteditable="true" spellcheck="false"
+               oninput="onEditorInput()"
+               onkeydown="handleEditorKey(event)"
+               onmouseup="updateToolbarState()"
+               onkeyup="updateToolbarState()">
+          </div>
+          <textarea id="source-view" class="source-textarea" style="display:none;" oninput="syncFromSource()"></textarea>
+          <div class="word-count" id="word-count">0 자</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LINK MODAL -->
+<div class="mini-modal-bg" id="link-modal">
+  <div class="mini-modal-box">
+    <div class="mini-modal-hd">
+      <div class="mini-modal-title">링크 삽입</div>
+      <button class="mini-modal-close" onclick="closeMiniModal('link-modal')">✕</button>
+    </div>
+    <div class="mini-modal-body">
+      <label class="mini-label">링크 텍스트</label>
+      <input class="mini-input" id="link-text" type="text" placeholder="표시할 텍스트">
+      <label class="mini-label">URL</label>
+      <input class="mini-input" id="link-url" type="url" placeholder="https://" onkeydown="if(event.key==='Enter')insertLink()">
+      <div class="mini-actions">
+        <button class="mini-btn cancel" onclick="closeMiniModal('link-modal')">취소</button>
+        <button class="mini-btn ok" onclick="insertLink()">삽입</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IMAGE MODAL -->
+<div class="mini-modal-bg" id="img-modal">
+  <div class="mini-modal-box">
+    <div class="mini-modal-hd">
+      <div class="mini-modal-title">이미지 삽입</div>
+      <button class="mini-modal-close" onclick="closeMiniModal('img-modal')">✕</button>
+    </div>
+    <div class="mini-modal-body">
+      <div class="mini-tabs">
+        <div class="mini-tab active" onclick="switchImgTab('url',this)">URL</div>
+        <div class="mini-tab" onclick="switchImgTab('file',this)">파일 업로드</div>
+      </div>
+      <div class="mini-tab-panel active" id="img-tab-url">
+        <label class="mini-label">이미지 URL</label>
+        <input class="mini-input" id="img-url" type="url" placeholder="https://example.com/image.jpg">
+        <label class="mini-label">대체 텍스트 (Alt)</label>
+        <input class="mini-input" id="img-alt" type="text" placeholder="이미지 설명">
+      </div>
+      <div class="mini-tab-panel" id="img-tab-file">
+        <label class="mini-label">이미지 파일</label>
+        <input type="file" id="img-file-input" accept="image/*" style="margin-bottom:14px;font-size:12px;" onchange="previewImgFile(event)">
+        <img id="img-file-preview" src="" alt="" style="max-width:100%;max-height:120px;display:none;margin-bottom:10px;border:1px solid var(--border);">
+        <label class="mini-label">대체 텍스트 (Alt)</label>
+        <input class="mini-input" id="img-file-alt" type="text" placeholder="이미지 설명">
+      </div>
+      <div class="mini-actions">
+        <button class="mini-btn cancel" onclick="closeMiniModal('img-modal')">취소</button>
+        <button class="mini-btn ok" onclick="insertImage()">삽입</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TABLE MODAL -->
+<div class="mini-modal-bg" id="table-modal">
+  <div class="mini-modal-box" style="width:360px;">
+    <div class="mini-modal-hd">
+      <div class="mini-modal-title">표 삽입</div>
+      <button class="mini-modal-close" onclick="closeMiniModal('table-modal')">✕</button>
+    </div>
+    <div class="mini-modal-body">
+      <div class="table-grid" id="table-grid"></div>
+      <div class="table-pick-label" id="table-pick-label">크기를 선택하세요</div>
+      <div class="mini-actions" style="margin-top:14px;">
+        <button class="mini-btn cancel" onclick="closeMiniModal('table-modal')">취소</button>
+        <button class="mini-btn ok" onclick="insertTable()">삽입</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PREVIEW OVERLAY -->
+<div class="preview-overlay" id="preview-overlay">
+  <div class="preview-bar">
+    <div class="preview-label" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);">미리보기</div>
+    <button class="preview-close-btn" onclick="closePreview()">편집으로 돌아가기 ←</button>
+  </div>
+  <div class="preview-content">
+    <img class="preview-cover" id="preview-cover-img" src="" alt="">
+    <div class="preview-pill" id="preview-pill"></div>
+    <div class="preview-hed" id="preview-hed"></div>
+    <div class="preview-dek" id="preview-dek"></div>
+    <div class="preview-meta">
+      <span id="preview-author"></span>
+      <span class="preview-meta-sep"></span>
+      <span id="preview-date"></span>
+    </div>
+    <div class="preview-body" id="preview-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── AUTH CHECK ── */
+if(sessionStorage.getItem('nova_admin')!=='1'){
+  window.location.href='index.html';
+}
+
+/* ── STATE ── */
+let currentId=null;
+let tableRows=1,tableCols=1;
+let imgFileDataUrl=null;
+let coverDataUrl=null;
+let savedRange=null;
+let isSourceMode=false;
+let autoSaveTimer=null;
+
+/* ── STORAGE HELPERS ── */
+function getArticles(){return JSON.parse(localStorage.getItem('nova_articles')||'[]');}
+function saveArticles(arr){localStorage.setItem('nova_articles',JSON.stringify(arr));}
+function genId(){return 'art_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);}
+
+/* ── FIREBASE CLOUD SYNC ── */
+const FIREBASE_DB_URL='https://novalaw-a437a-default-rtdb.firebaseio.com';
+function hasFirebase(){return FIREBASE_DB_URL&&FIREBASE_DB_URL!=='YOUR_FIREBASE_DB_URL_HERE';}
+
+async function saveArticleToCloud(art){
+  if(!hasFirebase())return;
+  try{
+    await fetch(FIREBASE_DB_URL+'/articles/'+art.id+'.json',{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(art)
+    });
+  }catch(e){console.error('Firebase save error:',e);}
+}
+
+async function deleteArticleFromCloud(id){
+  if(!hasFirebase())return;
+  try{
+    await fetch(FIREBASE_DB_URL+'/articles/'+id+'.json',{method:'DELETE'});
+  }catch(e){console.error('Firebase delete error:',e);}
+}
+
+function getCategories(){
+  try{
+    const c=JSON.parse(localStorage.getItem('nova_categories')||'null');
+    return Array.isArray(c)&&c.length?c:['카테고리 1','카테고리 2','카테고리 3','카테고리 4','카테고리 5','카테고리 6'];
+  }catch(e){return['카테고리 1','카테고리 2','카테고리 3','카테고리 4','카테고리 5','카테고리 6'];}
+}
+
+/* ── POPULATE SECTION SELECT ── */
+function populateSectionSelect(selectedValue){
+  const sel=document.getElementById('meta-section');
+  const cats=getCategories();
+  sel.innerHTML=cats.map(c=>`<option value="${c}"${c===selectedValue?' selected':''}>${c}</option>`).join('');
+  if(selectedValue&&cats.includes(selectedValue)){sel.value=selectedValue;}
+}
+
+/* ── SIDEBAR ── */
+let sidebarOpen=true;
+function toggleSidebar(){
+  sidebarOpen=!sidebarOpen;
+  document.getElementById('sidebar').classList.toggle('collapsed',!sidebarOpen);
+}
+function renderSidebar(){
+  const list=document.getElementById('sidebar-list');
+  const arts=getArticles();
+  if(!arts.length){list.innerHTML='<div class="sidebar-empty">작성된 글이 없습니다</div>';return;}
+  list.innerHTML=arts.map(a=>`
+    <div class="sidebar-item${a.id===currentId?' active':''}" onclick="loadArticle('${a.id}')">
+      <div class="sidebar-item-title">${a.title||'(제목 없음)'}</div>
+      <div class="sidebar-item-meta">
+        <span class="sidebar-item-pill${a.published?' published':''}">${a.published?'발행됨':'임시저장'}</span>
+        <span>${a.date||''}</span>
+      </div>
+      <button class="sidebar-item-del" onclick="event.stopPropagation();deleteArticle('${a.id}')" title="삭제">✕</button>
+    </div>
+  `).join('');
+}
+
+function newArticle(){
+  currentId=null;
+  document.getElementById('meta-title').value='';
+  populateSectionSelect('');
+  document.getElementById('meta-author').value='';
+  document.getElementById('meta-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('meta-dek').value='';
+  document.getElementById('editor-content').innerHTML='';
+  document.getElementById('topbar-title').textContent='새 글';
+  removeCover();
+  renderSidebar();
+  document.getElementById('editor-content').focus();
+  updateWordCount();
+}
+
+function loadArticle(id){
+  const arts=getArticles();
+  const a=arts.find(x=>x.id===id);
+  if(!a)return;
+  currentId=id;
+  document.getElementById('meta-title').value=a.title||'';
+  populateSectionSelect(a.section||'');
+  document.getElementById('meta-author').value=a.author||'';
+  document.getElementById('meta-date').value=a.date||'';
+  document.getElementById('meta-dek').value=a.dek||'';
+  document.getElementById('editor-content').innerHTML=a.body||'';
+  document.getElementById('topbar-title').textContent=a.title||'새 글';
+  if(a.cover){setCoverDataUrl(a.cover);}else{removeCover();}
+  renderSidebar();
+  updateWordCount();
+}
+
+function deleteArticle(id){
+  if(!confirm('이 글을 삭제하시겠습니까?'))return;
+  let arts=getArticles().filter(a=>a.id!==id);
+  saveArticles(arts);
+  deleteArticleFromCloud(id);
+  if(currentId===id)newArticle();
+  else renderSidebar();
+  showToast('삭제되었습니다');
+}
+
+/* ── COLLECT FORM DATA ── */
+function collectData(published){
+  return{
+    id:currentId||genId(),
+    title:document.getElementById('meta-title').value.trim(),
+    section:document.getElementById('meta-section').value,
+    author:document.getElementById('meta-author').value.trim(),
+    date:document.getElementById('meta-date').value,
+    dek:document.getElementById('meta-dek').value.trim(),
+    cover:coverDataUrl||'',
+    body:document.getElementById('editor-content').innerHTML,
+    published:!!published,
+    updatedAt:new Date().toISOString()
+  };
+}
+
+function upsertArticle(data){
+  let arts=getArticles();
+  const idx=arts.findIndex(a=>a.id===data.id);
+  if(idx>=0)arts[idx]=data; else arts.unshift(data);
+  saveArticles(arts);
+  currentId=data.id;
+  saveArticleToCloud(data);
+}
+
+function saveDraft(){
+  const data=collectData(false);
+  upsertArticle(data);
+  renderSidebar();
+  showAutoSave();
+  showToast('임시저장 완료');
+}
+
+function publishArticle(){
+  const data=collectData(true);
+  if(!data.title){showToast('제목을 입력해 주세요','err');return;}
+  upsertArticle(data);
+  renderSidebar();
+  showToast('발행 완료!','success');
+}
+
+/* ── AUTO SAVE ── */
+function onEditorInput(){
+  updateWordCount();
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer=setTimeout(()=>{
+    if(currentId||document.getElementById('editor-content').innerText.trim()){
+      const data=collectData(false);
+      upsertArticle(data);
+      renderSidebar();
+      showAutoSave();
+    }
+  },3000);
+}
+
+function onTitleChange(v){
+  document.getElementById('topbar-title').textContent=v||'새 글';
+}
+
+function showAutoSave(){
+  const b=document.getElementById('auto-save-badge');
+  b.style.display='flex';
+  clearTimeout(b._t);
+  b._t=setTimeout(()=>b.style.display='none',3000);
+}
+
+/* ── WORD COUNT ── */
+function updateWordCount(){
+  const text=document.getElementById('editor-content').innerText||'';
+  const count=text.replace(/\s/g,'').length;
+  document.getElementById('word-count').textContent=count.toLocaleString()+' 자';
+}
+
+/* ── COVER IMAGE ── */
+function triggerCoverUpload(){
+  document.getElementById('cover-file-input').click();
+}
+function handleCoverFile(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>setCoverDataUrl(ev.target.result);
+  reader.readAsDataURL(file);
+}
+function setCoverDataUrl(url){
+  coverDataUrl=url;
+  const thumb=document.getElementById('cover-thumb');
+  const placeholder=document.getElementById('cover-placeholder');
+  const area=document.getElementById('cover-area');
+  const removeBtn=document.getElementById('cover-remove-btn');
+  const infoText=document.getElementById('cover-info-text');
+  thumb.src=url;
+  thumb.classList.add('show');
+  placeholder.classList.add('hide');
+  area.classList.add('has-img');
+  removeBtn.style.display='';
+  infoText.textContent='커버 이미지가 설정되었습니다';
+}
+function setCoverUrl(){
+  const url=prompt('이미지 URL을 입력하세요:');
+  if(url&&url.trim())setCoverDataUrl(url.trim());
+}
+function removeCover(){
+  coverDataUrl=null;
+  const thumb=document.getElementById('cover-thumb');
+  const placeholder=document.getElementById('cover-placeholder');
+  const area=document.getElementById('cover-area');
+  const removeBtn=document.getElementById('cover-remove-btn');
+  const infoText=document.getElementById('cover-info-text');
+  thumb.src='';
+  thumb.classList.remove('show');
+  placeholder.classList.remove('hide');
+  area.classList.remove('has-img');
+  removeBtn.style.display='none';
+  infoText.textContent='이미지를 업로드하거나 URL을 입력하세요';
+}
+
+/* ── EDITOR COMMANDS ── */
+function cmd(command,value){
+  document.getElementById('editor-content').focus();
+  document.execCommand(command,false,value||null);
+  updateToolbarState();
+}
+
+function applyHeading(tag){
+  if(!tag)return;
+  document.getElementById('editor-content').focus();
+  document.execCommand('formatBlock',false,tag);
+  updateToolbarState();
+}
+
+function applyFont(font){
+  if(!font)return;
+  saveEditorRange();restoreEditorRange();
+  document.execCommand('fontName',false,font);
+}
+
+function applyFontSize(size){
+  if(!size)return;
+  document.execCommand('fontSize',false,size);
+}
+
+function applyColor(color,command){
+  saveEditorRange();restoreEditorRange();
+  document.execCommand(command,false,color);
+}
+
+function handleEditorKey(e){
+  if(e.key==='Tab'){
+    e.preventDefault();
+    document.execCommand('insertHTML',false,'&nbsp;&nbsp;&nbsp;&nbsp;');
+  }
+}
+
+/* ── TOOLBAR STATE ── */
+function updateToolbarState(){
+  ['bold','italic','underline','strikeThrough'].forEach(c=>{
+    const map={bold:'btn-bold',italic:'btn-italic',underline:'btn-underline',strikeThrough:'btn-strike'};
+    const btn=document.getElementById(map[c]);
+    if(btn)btn.classList.toggle('active',document.queryCommandState(c));
+  });
+}
+
+/* ── SOURCE VIEW ── */
+function toggleSource(){
+  const editor=document.getElementById('editor-content');
+  const source=document.getElementById('source-view');
+  const btn=document.getElementById('btn-source');
+  isSourceMode=!isSourceMode;
+  if(isSourceMode){
+    source.value=editor.innerHTML;
+    editor.style.display='none';
+    source.style.display='block';
+    btn.classList.add('active');
+  } else {
+    editor.innerHTML=source.value;
+    editor.style.display='';
+    source.style.display='none';
+    btn.classList.remove('active');
+  }
+}
+function syncFromSource(){
+  if(!isSourceMode)return;
+  document.getElementById('editor-content').innerHTML=document.getElementById('source-view').value;
+  updateWordCount();
+}
+
+/* ── RANGE SAVE/RESTORE ── */
+function saveEditorRange(){
+  const sel=window.getSelection();
+  if(sel.rangeCount>0)savedRange=sel.getRangeAt(0).cloneRange();
+}
+function restoreEditorRange(){
+  if(!savedRange)return;
+  const sel=window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(savedRange);
+}
+document.getElementById('editor-content').addEventListener('blur',saveEditorRange);
+
+/* ── INSERT HR ── */
+function insertHR(){
+  document.getElementById('editor-content').focus();
+  document.execCommand('insertHorizontalRule',false,null);
+}
+
+/* ── LINK MODAL ── */
+function openLinkModal(){
+  saveEditorRange();
+  const sel=window.getSelection();
+  document.getElementById('link-text').value=sel.toString().trim();
+  document.getElementById('link-url').value='https://';
+  openMiniModal('link-modal');
+  setTimeout(()=>document.getElementById('link-url').focus(),100);
+}
+function insertLink(){
+  const text=document.getElementById('link-text').value.trim();
+  const url=document.getElementById('link-url').value.trim();
+  if(!url||url==='https://')return;
+  restoreEditorRange();
+  document.getElementById('editor-content').focus();
+  document.execCommand('insertHTML',false,`<a href="${url}" target="_blank">${text||url}</a>`);
+  closeMiniModal('link-modal');
+}
+
+/* ── IMAGE MODAL ── */
+function openImgModal(){
+  saveEditorRange();
+  document.getElementById('img-url').value='';
+  document.getElementById('img-alt').value='';
+  document.getElementById('img-file-preview').style.display='none';
+  document.getElementById('img-file-preview').src='';
+  imgFileDataUrl=null;
+  openMiniModal('img-modal');
+}
+function switchImgTab(tab,el){
+  document.querySelectorAll('.mini-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.mini-tab-panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('img-tab-'+tab).classList.add('active');
+}
+function previewImgFile(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    imgFileDataUrl=ev.target.result;
+    const prev=document.getElementById('img-file-preview');
+    prev.src=imgFileDataUrl;
+    prev.style.display='block';
+  };
+  reader.readAsDataURL(file);
+}
+function insertImage(){
+  const isUrl=document.getElementById('img-tab-url').classList.contains('active');
+  let src,alt;
+  if(isUrl){
+    src=document.getElementById('img-url').value.trim();
+    alt=document.getElementById('img-alt').value.trim();
+  } else {
+    src=imgFileDataUrl;
+    alt=document.getElementById('img-file-alt').value.trim();
+  }
+  if(!src){showToast('이미지를 선택하거나 URL을 입력해 주세요','err');return;}
+  restoreEditorRange();
+  document.getElementById('editor-content').focus();
+  document.execCommand('insertHTML',false,`<img src="${src}" alt="${alt||'이미지'}" style="max-width:100%;"><br>`);
+  closeMiniModal('img-modal');
+}
+
+/* ── TABLE MODAL ── */
+function buildTableGrid(){
+  const grid=document.getElementById('table-grid');
+  grid.innerHTML='';
+  for(let r=1;r<=6;r++){
+    for(let c=1;c<=8;c++){
+      const cell=document.createElement('div');
+      cell.className='table-cell-pick';
+      cell.dataset.r=r;cell.dataset.c=c;
+      cell.addEventListener('mouseover',()=>highlightGrid(r,c));
+      cell.addEventListener('click',()=>{tableRows=r;tableCols=c;});
+      grid.appendChild(cell);
+    }
+  }
+}
+function highlightGrid(r,c){
+  tableRows=r;tableCols=c;
+  document.querySelectorAll('.table-cell-pick').forEach(el=>{
+    el.classList.toggle('sel',+el.dataset.r<=r&&+el.dataset.c<=c);
+  });
+  document.getElementById('table-pick-label').textContent=`${r} × ${c}`;
+}
+function openTableModal(){
+  saveEditorRange();buildTableGrid();tableRows=1;tableCols=1;
+  document.getElementById('table-pick-label').textContent='크기를 선택하세요';
+  openMiniModal('table-modal');
+}
+function insertTable(){
+  let html='<table>';
+  for(let r=0;r<tableRows;r++){
+    html+='<tr>';
+    for(let c=0;c<tableCols;c++){html+=r===0?'<th>&nbsp;</th>':'<td>&nbsp;</td>';}
+    html+='</tr>';
+  }
+  html+='</table><p></p>';
+  restoreEditorRange();
+  document.getElementById('editor-content').focus();
+  document.execCommand('insertHTML',false,html);
+  closeMiniModal('table-modal');
+}
+
+/* ── MODAL HELPERS ── */
+function openMiniModal(id){document.getElementById(id).classList.add('open');}
+function closeMiniModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.mini-modal-bg').forEach(bg=>{
+  bg.addEventListener('click',e=>{if(e.target===bg)bg.classList.remove('open');});
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    document.querySelectorAll('.mini-modal-bg.open').forEach(bg=>bg.classList.remove('open'));
+    closePreview();
+  }
+});
+
+/* ── PREVIEW ── */
+function openPreview(){
+  const section=document.getElementById('meta-section').value;
+  document.getElementById('preview-pill').textContent=section||'기사';
+  document.getElementById('preview-hed').textContent=document.getElementById('meta-title').value||'(제목 없음)';
+  document.getElementById('preview-dek').textContent=document.getElementById('meta-dek').value;
+  document.getElementById('preview-author').textContent=document.getElementById('meta-author').value;
+  document.getElementById('preview-date').textContent=document.getElementById('meta-date').value;
+  document.getElementById('preview-body').innerHTML=document.getElementById('editor-content').innerHTML;
+  const coverImg=document.getElementById('preview-cover-img');
+  if(coverDataUrl){coverImg.src=coverDataUrl;coverImg.classList.add('show');}
+  else{coverImg.src='';coverImg.classList.remove('show');}
+  document.getElementById('preview-overlay').classList.add('open');
+}
+function closePreview(){
+  document.getElementById('preview-overlay').classList.remove('open');
+}
+
+/* ── TOAST ── */
+function showToast(msg,type){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast'+(type==='success'?' success':type==='err'?' err':'')+' show';
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+/* ── LOGOUT ── */
+function logout(){
+  sessionStorage.removeItem('nova_admin');
+  window.location.href='index.html';
+}
+
+/* ── INIT ── */
+(function init(){
+  // Set today's date
+  document.getElementById('meta-date').value=new Date().toISOString().slice(0,10);
+
+  // Populate section select from categories
+  populateSectionSelect('');
+
+  // Check URL param for edit mode
+  const params=new URLSearchParams(location.search);
+  const editId=params.get('id');
+  if(editId){
+    const arts=getArticles();
+    const art=arts.find(a=>a.id===editId);
+    if(art){loadArticle(editId);}
+    else{renderSidebar();}
+  } else {
+    renderSidebar();
+  }
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown',e=>{
+    if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveDraft();}
+    if((e.ctrlKey||e.metaKey)&&e.shiftKey&&e.key==='P'){e.preventDefault();openPreview();}
+  });
+
+  // Focus editor
+  setTimeout(()=>document.getElementById('editor-content').focus(),200);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>뉴스레터 제목 Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#EEF2F7;
+  --surface:#FFFFFF;
+  --surface-2:#F6F9FC;
+  --navy:#0A1628;
+  --navy-l:#1B3870;
+  --navy-pale:#ECF0F9;
+  --navy-deep:#060D18;
+  --red:#C83820;
+  --red-d:#A82E1A;
+  --ink:#0D1829;
+  --txt:#1E2A3B;
+  --txt2:#4B5A6B;
+  --txt3:#8FA0B4;
+  --border:#D6E0EC;
+  --border-l:#EEF2F7;
+  --sh:0 1px 3px rgba(15,35,71,.06),0 4px 14px rgba(15,35,71,.05);
+  --sh2:0 4px 16px rgba(15,35,71,.12),0 2px 6px rgba(15,35,71,.06);
+  --admin-bar-h:44px;
+}
+body{background:var(--bg);font-family:'Noto Sans KR','Inter',sans-serif;color:var(--txt);}
+body.admin-mode{padding-top:var(--admin-bar-h);}
+
+/* ── ADMIN FLOATING BAR ── */
+.admin-bar{
+  display:none;position:fixed;top:0;left:0;right:0;height:var(--admin-bar-h);
+  background:var(--navy-deep);z-index:500;
+  align-items:center;padding:0 20px;gap:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
+}
+.admin-bar.visible{display:flex;}
+.admin-bar-label{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.35);margin-right:6px;
+}
+.admin-bar-btn{
+  padding:6px 14px;font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border:none;
+  transition:all .2s;
+}
+.admin-bar-btn.write{background:var(--red);color:#fff;}
+.admin-bar-btn.write:hover{background:var(--red-d);}
+.admin-bar-btn.cat{background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);}
+.admin-bar-btn.cat:hover{background:rgba(255,255,255,.22);color:#fff;}
+.admin-bar-btn.logout{background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.55);margin-left:auto;}
+.admin-bar-btn.logout:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.4);}
+
+/* ── MASTHEAD ── */
+.mast{
+  background:var(--surface);
+  border-bottom:3px solid var(--navy);
+  box-shadow:0 2px 10px rgba(15,35,71,.08);
+  padding:0 40px;
+  position:sticky;top:0;z-index:100;
+}
+body.admin-mode .mast{top:var(--admin-bar-h);}
+.mast-top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 0 14px;
+}
+
+/* ── LOGO ── */
+.mast-brand{display:flex;flex-direction:column;gap:3px;}
+.logo-wrap{display:flex;align-items:center;}
+.logo-img{
+  height:42px;width:auto;
+  display:none;
+}
+.logo-img[src]:not([src=""]){display:block;}
+.logo-img[src]:not([src=""])~.logo-text{display:none;}
+.logo-text{
+  font-family:'Inter',sans-serif;font-size:22px;font-weight:800;
+  color:var(--navy);letter-spacing:-.03em;line-height:1;
+  text-decoration:none;cursor:pointer;
+}
+.mast-tagline{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:500;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--txt3);
+}
+
+.mast-right{display:flex;align-items:center;gap:20px;}
+.mast-issue{
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:500;
+  letter-spacing:.06em;color:var(--txt3);
+}
+.mast-sub-btn{
+  display:inline-block;background:var(--red);border:none;
+  padding:10px 22px;
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:#fff;
+  cursor:pointer;transition:background .2s;text-decoration:none;
+}
+.mast-sub-btn:hover{background:var(--red-d);}
+
+/* ── NAV ── */
+.mast-nav{
+  display:flex;
+  border-top:1px solid var(--border-l);
+  margin:0 -40px;
+  background:var(--surface);
+}
+.mast-nav-item{
+  flex:1;padding:11px 0;text-align:center;
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--txt3);
+  cursor:pointer;position:relative;overflow:hidden;transition:color .2s;
+  border-right:1px solid var(--border-l);
+}
+.mast-nav-item:last-child{border-right:none;}
+.mast-nav-item::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:var(--navy);transform:scaleX(0);transition:transform .22s;
+}
+.mast-nav-item.active::after,.mast-nav-item:hover::after{transform:scaleX(1);}
+.mast-nav-item.active{color:var(--navy);}
+.mast-nav-item:hover{color:var(--navy-l);}
+
+/* ── HERO ── */
+.hero{
+  display:grid;grid-template-columns:60% 40%;
+  background:var(--surface);
+  box-shadow:var(--sh);
+  margin:20px;
+}
+
+/* Left: 2 stacked articles */
+.hero-l-wrap{
+  display:flex;flex-direction:column;
+  border-right:1px solid var(--border);
+}
+.hero-card{
+  flex:1;padding:32px 36px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  cursor:pointer;transition:background .22s;
+  position:relative;overflow:hidden;
+  min-height:210px;
+}
+.hero-card:first-child{border-bottom:1px solid var(--border);}
+.hero-card:hover{background:var(--surface-2);}
+.hero-card-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.hero-pill{
+  background:var(--navy);padding:5px 14px;
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:#fff;
+}
+.hero-issue-line{
+  font-family:'Inter',sans-serif;font-size:9px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--txt3);
+}
+.hero-card-hed{
+  font-family:'Noto Serif KR',serif;font-size:27px;font-weight:700;
+  line-height:1.3;letter-spacing:-.01em;color:var(--ink);margin-bottom:10px;
+}
+.hero-card-hed em{font-style:normal;}
+.hero-card-dek{
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:300;
+  line-height:1.85;color:var(--txt2);margin-bottom:18px;
+}
+.hero-byline{display:flex;align-items:center;gap:10px;}
+.hero-byline-name{
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.04em;color:var(--txt);
+}
+.hero-byline-sep{width:1px;height:10px;background:var(--border);}
+.hero-byline-time{font-family:'Inter',sans-serif;font-size:11px;color:var(--txt3);}
+
+/* Right: Article list */
+.hero-r-list{
+  background:var(--surface-2);
+  display:flex;flex-direction:column;
+}
+.hero-list-hd{
+  padding:16px 22px 13px;
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--txt3);border-bottom:2px solid var(--navy);
+  background:var(--surface);
+}
+.hero-list-item{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:14px 18px;
+  border-bottom:1px solid var(--border-l);
+  cursor:pointer;transition:background .2s;
+  flex:1;position:relative;
+}
+.hero-list-item:last-child{border-bottom:none;}
+.hero-list-item:hover{background:#EDF2F8;}
+.hero-list-num{
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  color:var(--border);flex-shrink:0;margin-top:3px;width:20px;
+}
+.hero-list-info{flex:1;}
+.hero-list-cat{
+  font-family:'Inter',sans-serif;font-size:8px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--navy-l);margin-bottom:4px;
+}
+.hero-list-title{
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;
+  line-height:1.4;color:var(--ink);margin-bottom:5px;
+}
+.hero-list-byline{
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:600;
+  color:var(--txt2);
+}
+.hero-list-arrow{
+  font-size:14px;color:var(--border);
+  transition:color .2s;flex-shrink:0;margin-top:3px;
+}
+.hero-list-item:hover .hero-list-arrow{color:var(--navy);}
+
+/* ── SECTION HEADER ── */
+.sec-hd{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  padding:28px 20px 14px;
+  margin:20px 20px 0;
+  border-bottom:2px solid var(--navy);
+}
+.sec-hd-label{
+  font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;
+  color:var(--navy);line-height:1;letter-spacing:-.01em;
+}
+.sec-hd-sub{
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);
+  padding-bottom:2px;cursor:pointer;transition:all .2s;
+  border-bottom:1px solid transparent;
+}
+.sec-hd-sub:hover{color:var(--navy);border-bottom-color:var(--navy);}
+
+/* ── CARD GRID ── */
+.grid3{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  background:transparent;
+  margin:10px 20px 0;
+}
+.card{
+  background:var(--surface);padding:26px 22px 40px;
+  position:relative;cursor:pointer;
+  transition:box-shadow .22s,transform .2s,border-top-color .2s;
+  overflow:hidden;
+  box-shadow:var(--sh);
+  border-top:3px solid transparent;
+}
+.card:hover{box-shadow:var(--sh2);transform:translateY(-2px);border-top-color:var(--navy);}
+.card:hover .card-arrow{color:var(--navy);transform:translate(4px,-4px);}
+
+.card.accent{background:var(--navy);border-top-color:var(--navy-deep);}
+.card.accent:hover{background:var(--navy-deep);border-top-color:rgba(255,255,255,.2);}
+.card.accent .card-num{color:rgba(255,255,255,.12);}
+.card.accent .card-cat{color:rgba(255,255,255,.55);}
+.card.accent .card-title{color:#fff;}
+.card.accent .card-body{color:rgba(255,255,255,.72);}
+.card.accent .card-arrow{color:rgba(255,255,255,.25);}
+.card.accent:hover .card-arrow{color:#fff;transform:translate(4px,-4px);}
+
+.card.dark{background:var(--surface-2);border-top-color:transparent;}
+.card.dark:hover{background:#EDF2F8;border-top-color:var(--navy);}
+.card.dark .card-num{color:var(--navy-pale);}
+.card.dark .card-cat{color:var(--txt3);}
+.card.dark .card-title{color:var(--ink);}
+.card.dark .card-body{color:var(--txt2);}
+.card.dark .card-arrow{color:var(--border);}
+.card.dark:hover .card-arrow{color:var(--navy);transform:translate(4px,-4px);}
+
+.card-num{
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:700;
+  color:var(--navy-pale);margin-bottom:12px;letter-spacing:.08em;
+}
+.card-cat{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--txt3);margin-bottom:10px;
+}
+.card-title{
+  font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:700;
+  line-height:1.4;color:var(--ink);margin-bottom:12px;
+}
+.card-body{
+  font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:300;
+  line-height:1.9;color:var(--txt2);
+}
+.card-arrow{
+  position:absolute;bottom:18px;right:20px;font-size:18px;
+  color:var(--border);transition:color .22s,transform .25s;
+}
+.card-byline{
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:600;
+  color:var(--txt2);margin-top:12px;letter-spacing:.02em;
+}
+.card.accent .card-byline{color:rgba(255,255,255,.7);}
+.card.dark .card-byline{color:var(--txt2);}
+.feat-byline{
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:600;
+  color:var(--txt2);margin-top:18px;letter-spacing:.02em;
+}
+.feat-side-item .card-byline{font-size:10px;margin-top:8px;}
+.brief-byline{
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:600;
+  color:var(--txt2);margin-top:8px;
+}
+
+/* ── FEATURE SPLIT ── */
+.feat{
+  display:grid;grid-template-columns:1.65fr 1fr;
+  gap:10px;background:transparent;
+  margin:10px 20px 0;
+}
+.feat-main{
+  background:var(--surface);padding:40px 36px;cursor:pointer;
+  transition:box-shadow .22s;position:relative;overflow:hidden;
+  box-shadow:var(--sh);
+  border-left:4px solid var(--navy);
+}
+.feat-main:hover{box-shadow:var(--sh2);}
+.feat-main .card-cat{color:var(--navy-l);letter-spacing:.18em;margin-left:0;}
+.feat-main .card-title{
+  font-family:'Noto Serif KR',serif;font-size:32px;font-weight:700;
+  line-height:1.25;color:var(--ink);
+  margin-bottom:18px;text-transform:none;margin-left:0;
+}
+.feat-main .card-title em{font-style:normal;font-weight:700;color:var(--navy-l);}
+.feat-main .card-body{
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:300;
+  line-height:1.95;color:var(--txt2);margin-left:0;
+}
+.feat-side{display:flex;flex-direction:column;gap:10px;}
+.feat-side-item{
+  flex:1;background:var(--surface);padding:26px 22px;
+  cursor:pointer;
+  transition:box-shadow .22s,transform .2s,border-top-color .2s;
+  position:relative;
+  box-shadow:var(--sh);
+  border-top:3px solid transparent;
+}
+.feat-side-item:hover{box-shadow:var(--sh2);transform:translateY(-2px);border-top-color:var(--navy);}
+.feat-side-item:hover .card-arrow{color:var(--navy);transform:translate(4px,-4px);}
+.feat-side-item .card-num{font-size:11px;}
+.feat-side-item .card-title{font-size:14px;}
+
+/* ── QUOTE BAND ── */
+.quote-band{
+  background:var(--navy);padding:48px 44px;
+  margin:20px 20px 0;
+  display:flex;align-items:center;
+  position:relative;overflow:hidden;
+  box-shadow:var(--sh);
+}
+.quote-band::after{
+  content:'"';
+  position:absolute;right:-16px;bottom:-50px;
+  font-family:'Georgia',serif;font-size:360px;line-height:1;
+  color:rgba(255,255,255,.04);font-style:italic;pointer-events:none;
+}
+.quote-mark{
+  font-family:'Georgia',serif;font-size:100px;line-height:.6;
+  color:rgba(255,255,255,.18);flex-shrink:0;
+  margin-right:28px;margin-top:-10px;
+}
+.quote-body{flex:1;}
+.quote-text{
+  font-family:'Noto Serif KR',serif;font-size:20px;font-weight:600;
+  line-height:1.8;color:#fff;margin-bottom:16px;
+}
+.quote-attr{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:600;
+  letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45);
+}
+
+/* ── BRIEF ROW ── */
+.brief-wrap{margin:0 20px 0;}
+.brief-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:10px;background:transparent;
+}
+.brief-card{
+  background:var(--surface);padding:22px 18px;cursor:pointer;
+  border-top:3px solid transparent;
+  transition:box-shadow .2s,border-top-color .2s,transform .2s;
+  box-shadow:var(--sh);
+  position:relative;
+}
+.brief-card:hover{box-shadow:var(--sh2);border-top-color:var(--navy);transform:translateY(-2px);}
+.brief-n{
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  color:var(--navy-pale);line-height:1;margin-bottom:10px;letter-spacing:.06em;
+}
+.brief-title{
+  font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:700;
+  line-height:1.4;color:var(--ink);margin-bottom:8px;
+}
+.brief-body{
+  font-family:'Noto Sans KR',sans-serif;font-size:11px;font-weight:300;
+  line-height:1.9;color:var(--txt2);
+}
+
+/* ── ADMIN OVERLAY ON CARDS ── */
+.admin-card-actions{
+  display:none;position:absolute;top:8px;right:8px;
+  gap:4px;z-index:10;
+}
+body.admin-mode .admin-card-actions{display:flex;}
+.admin-card-btn{
+  width:26px;height:26px;border:none;cursor:pointer;
+  font-size:11px;display:flex;align-items:center;justify-content:center;
+  transition:all .18s;opacity:.85;
+}
+.admin-card-btn:hover{opacity:1;transform:scale(1.1);}
+.admin-card-btn.edit{background:var(--navy);color:#fff;}
+.admin-card-btn.edit:hover{background:var(--navy-l);}
+.admin-card-btn.del{background:var(--red);color:#fff;}
+.admin-card-btn.del:hover{background:var(--red-d);}
+
+/* ── FOOTER ── */
+.foot{
+  background:var(--navy);padding:44px 40px 32px;
+  display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:48px;
+  margin-top:28px;
+}
+.foot-logo{
+  font-family:'Inter',sans-serif;font-size:20px;font-weight:800;
+  letter-spacing:-.02em;color:#fff;margin-bottom:6px;cursor:pointer;
+}
+.foot-tag{
+  font-family:'Inter',sans-serif;font-size:8px;
+  letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:18px;
+}
+.foot-copy{
+  font-family:'Noto Sans KR',sans-serif;font-size:11px;
+  font-weight:300;color:rgba(255,255,255,.45);line-height:1.9;
+}
+.foot-col-title{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.38);
+  margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:10px;
+}
+.foot-link{
+  font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:300;
+  color:rgba(255,255,255,.58);display:block;margin-bottom:10px;
+  cursor:pointer;transition:color .2s;text-decoration:none;
+}
+.foot-link:hover{color:#fff;}
+
+/* ── ALL ARTICLES MODAL ── */
+.all-modal-bg{
+  display:none;position:fixed;inset:0;background:rgba(11,25,50,.7);
+  z-index:998;align-items:flex-start;justify-content:center;
+  backdrop-filter:blur(8px);overflow-y:auto;padding:40px 20px;
+}
+.all-modal-bg.open{display:flex;}
+.all-modal-box{
+  background:var(--surface);width:100%;max-width:820px;
+  position:relative;animation:fadeUp .3s ease;
+  box-shadow:0 20px 60px rgba(11,25,50,.2);
+}
+.all-modal-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 32px;
+  background:var(--navy);
+}
+.all-modal-title{
+  font-family:'Noto Serif KR',serif;font-size:22px;font-weight:700;
+  color:#fff;
+}
+.all-modal-close{
+  font-size:16px;color:rgba(255,255,255,.5);background:none;border:none;
+  cursor:pointer;transition:color .2s;
+}
+.all-modal-close:hover{color:#fff;}
+.all-art-list{display:flex;flex-direction:column;gap:0;}
+.all-art-item{
+  display:flex;align-items:center;gap:20px;
+  padding:18px 32px;border-bottom:1px solid var(--border);
+  cursor:pointer;transition:background .2s;
+  position:relative;
+}
+.all-art-item:hover{background:var(--navy-pale);}
+.all-art-num{
+  font-family:'Inter',sans-serif;font-size:13px;font-weight:700;
+  color:var(--border);flex-shrink:0;width:32px;
+}
+.all-art-info{flex:1;}
+.all-art-pill{
+  display:inline-block;background:var(--navy);padding:3px 10px;
+  font-family:'Inter',sans-serif;font-size:8px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:#fff;margin-bottom:6px;
+}
+.all-art-title{
+  font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:700;
+  color:var(--ink);margin-bottom:4px;
+}
+.all-art-time{
+  font-family:'Inter',sans-serif;font-size:10px;
+  color:var(--txt3);letter-spacing:.06em;
+}
+.all-art-arrow{font-size:16px;color:var(--border);transition:color .2s;flex-shrink:0;}
+.all-art-item:hover .all-art-arrow{color:var(--navy);}
+
+/* ── SUBSCRIBE MODAL ── */
+.modal-bg{
+  display:none;position:fixed;inset:0;background:rgba(11,25,50,.7);
+  z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(8px);
+}
+.modal-bg.open{display:flex;}
+.modal-box{
+  background:var(--surface);
+  padding:44px 40px;max-width:420px;width:90%;
+  position:relative;animation:fadeUp .35s ease;
+  box-shadow:0 20px 60px rgba(11,25,50,.2);
+  border-top:4px solid var(--navy);
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.modal-close{
+  position:absolute;top:16px;right:18px;font-size:16px;color:var(--txt3);
+  cursor:pointer;transition:color .2s;background:none;border:none;
+}
+.modal-close:hover{color:var(--ink);}
+.modal-eyebrow{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--navy-l);margin-bottom:12px;
+}
+.modal-title{
+  font-family:'Noto Serif KR',serif;font-size:32px;font-weight:700;
+  line-height:1.25;color:var(--ink);margin-bottom:12px;
+}
+.modal-sub{
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:300;
+  line-height:1.9;color:var(--txt2);margin-bottom:22px;
+}
+.modal-input{
+  width:100%;background:var(--surface-2);border:1px solid var(--border);padding:12px 16px;
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:300;color:var(--ink);
+  margin-bottom:10px;outline:none;transition:border-color .2s;
+}
+.modal-input:focus{border-color:var(--navy);}
+.modal-input::placeholder{color:var(--txt3);}
+.modal-btn{
+  width:100%;background:var(--red);border:none;padding:13px;
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:#fff;
+  cursor:pointer;transition:background .2s;
+}
+.modal-btn:hover{background:var(--red-d);}
+.modal-fine{
+  font-family:'Noto Sans KR',sans-serif;font-size:10px;font-weight:300;
+  color:var(--txt3);margin-top:10px;line-height:1.75;
+}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:32px;right:32px;
+  background:var(--navy);color:#fff;
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:12px 20px;opacity:0;transform:translateY(10px);
+  transition:opacity .3s,transform .3s;z-index:1001;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateY(0);}
+
+/* ── PROGRESS BAR ── */
+.progress{
+  position:fixed;top:0;left:0;height:3px;
+  background:var(--navy);z-index:1000;width:0%;transition:width .1s;
+}
+body.admin-mode .progress{top:var(--admin-bar-h);}
+
+/* ── ADMIN LINK ── */
+.admin-link{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:500;
+  color:rgba(255,255,255,.2);cursor:pointer;
+  margin-left:10px;letter-spacing:.08em;
+  transition:color .2s;border-bottom:1px solid transparent;
+  user-select:none;
+}
+.admin-link:hover{color:rgba(255,255,255,.5);border-bottom-color:rgba(255,255,255,.3);}
+
+/* ── ADMIN LOGIN MODAL ── */
+.admin-modal-bg{
+  display:none;position:fixed;inset:0;background:rgba(6,13,24,.85);
+  z-index:1100;align-items:center;justify-content:center;backdrop-filter:blur(12px);
+}
+.admin-modal-bg.open{display:flex;}
+.admin-modal-box{
+  background:var(--surface);width:360px;
+  position:relative;animation:fadeUp .3s ease;
+  box-shadow:0 24px 80px rgba(6,13,24,.4);
+  border-top:3px solid var(--navy);
+}
+.admin-modal-hd{
+  background:var(--navy);padding:20px 28px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.admin-modal-title{
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.7);
+}
+.admin-modal-close{
+  font-size:14px;color:rgba(255,255,255,.4);background:none;border:none;
+  cursor:pointer;transition:color .2s;
+}
+.admin-modal-close:hover{color:#fff;}
+.admin-modal-body{padding:28px;}
+.admin-modal-label{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--txt3);
+  margin-bottom:6px;display:block;
+}
+.admin-modal-input{
+  width:100%;background:var(--surface-2);border:1px solid var(--border);
+  padding:11px 14px;margin-bottom:14px;
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;color:var(--ink);
+  outline:none;transition:border-color .2s;
+}
+.admin-modal-input:focus{border-color:var(--navy);}
+.admin-modal-input.err{border-color:var(--red);}
+.admin-modal-btn{
+  width:100%;background:var(--navy);border:none;padding:13px;
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:#fff;
+  cursor:pointer;transition:background .2s;margin-top:4px;
+}
+.admin-modal-btn:hover{background:var(--navy-l);}
+.admin-modal-err{
+  font-family:'Noto Sans KR',sans-serif;font-size:11px;color:var(--red);
+  margin-top:10px;display:none;text-align:center;
+}
+.admin-modal-err.show{display:block;}
+
+/* ── CATEGORY MODAL ── */
+.cat-modal-bg{
+  display:none;position:fixed;inset:0;background:rgba(6,13,24,.8);
+  z-index:1100;align-items:center;justify-content:center;backdrop-filter:blur(10px);
+}
+.cat-modal-bg.open{display:flex;}
+.cat-modal-box{
+  background:var(--surface);width:420px;
+  position:relative;animation:fadeUp .3s ease;
+  box-shadow:0 24px 80px rgba(6,13,24,.35);
+  border-top:3px solid var(--navy);
+}
+.cat-modal-hd{
+  background:var(--navy);padding:18px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.cat-modal-title{
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.7);
+}
+.cat-modal-close{
+  font-size:14px;color:rgba(255,255,255,.4);background:none;border:none;
+  cursor:pointer;transition:color .2s;
+}
+.cat-modal-close:hover{color:#fff;}
+.cat-modal-body{padding:22px 24px;}
+.cat-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;max-height:280px;overflow-y:auto;}
+.cat-item{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 12px;background:var(--surface-2);border:1px solid var(--border);
+}
+.cat-item-name{
+  flex:1;font-family:'Noto Sans KR',sans-serif;font-size:13px;color:var(--ink);
+}
+.cat-item-input{
+  flex:1;background:transparent;border:none;outline:none;
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;color:var(--ink);
+  padding:0;
+}
+.cat-item-edit{
+  background:none;border:none;color:var(--txt3);cursor:pointer;font-size:12px;
+  padding:3px 6px;transition:color .15s;
+}
+.cat-item-edit:hover{color:var(--navy);}
+.cat-item-del{
+  background:none;border:none;color:var(--txt3);cursor:pointer;font-size:12px;
+  padding:3px 6px;transition:color .15s;
+}
+.cat-item-del:hover{color:var(--red);}
+.cat-add-row{display:flex;gap:8px;}
+.cat-add-input{
+  flex:1;background:var(--surface-2);border:1px solid var(--border);
+  padding:9px 12px;font-family:'Noto Sans KR',sans-serif;font-size:13px;
+  color:var(--ink);outline:none;transition:border-color .2s;
+}
+.cat-add-input:focus{border-color:var(--navy);}
+.cat-add-input::placeholder{color:var(--txt3);}
+.cat-add-btn{
+  background:var(--navy);border:none;color:#fff;
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.12em;padding:9px 16px;cursor:pointer;
+  transition:background .2s;
+}
+.cat-add-btn:hover{background:var(--navy-l);}
+
+/* ── ARTICLE READER OVERLAY ── */
+.reader-overlay{
+  display:none;position:fixed;inset:0;background:var(--bg);
+  z-index:600;overflow-y:auto;
+}
+.reader-overlay.open{display:block;}
+.reader-bar{
+  position:sticky;top:0;background:var(--navy);
+  padding:12px 24px;display:flex;align-items:center;gap:16px;
+  z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+.reader-bar-label{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);
+}
+.reader-close-btn{
+  margin-left:auto;background:rgba(255,255,255,.12);border:none;
+  color:#fff;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;padding:7px 16px;
+  cursor:pointer;transition:background .2s;
+}
+.reader-close-btn:hover{background:rgba(255,255,255,.22);}
+.reader-content{max-width:760px;margin:48px auto;padding:0 24px 80px;}
+.reader-cover{width:100%;max-height:380px;object-fit:cover;margin-bottom:32px;display:none;}
+.reader-cover.show{display:block;}
+.reader-pill{
+  display:inline-block;background:var(--navy);padding:4px 12px;
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:#fff;margin-bottom:14px;
+}
+.reader-hed{
+  font-family:'Noto Serif KR',serif;font-size:36px;font-weight:700;
+  line-height:1.25;color:var(--ink);margin-bottom:14px;
+}
+.reader-dek{
+  font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:300;
+  line-height:1.9;color:var(--txt2);margin-bottom:20px;
+}
+.reader-meta{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Inter',sans-serif;font-size:11px;color:var(--txt3);
+  margin-bottom:36px;padding-bottom:24px;border-bottom:2px solid var(--navy);
+}
+.reader-meta-sep{width:1px;height:12px;background:var(--border);}
+.reader-body{
+  font-family:'Noto Sans KR',sans-serif;font-size:15px;line-height:1.95;color:var(--ink);
+}
+.reader-body h1{font-family:'Noto Serif KR',serif;font-size:32px;font-weight:700;line-height:1.3;margin:28px 0 14px;}
+.reader-body h2{font-family:'Noto Serif KR',serif;font-size:24px;font-weight:700;margin:24px 0 12px;}
+.reader-body h3{font-size:18px;font-weight:700;margin:20px 0 10px;}
+.reader-body h4{font-size:15px;font-weight:700;margin:16px 0 8px;}
+.reader-body p{margin:0 0 12px;}
+.reader-body blockquote{border-left:4px solid var(--navy);padding:14px 20px;margin:20px 0;background:var(--navy-pale);font-style:italic;color:var(--txt2);font-size:14px;line-height:1.9;}
+.reader-body pre{background:var(--ink);color:#e8f0fe;padding:18px 22px;margin:16px 0;font-family:'Courier New',monospace;font-size:13px;overflow-x:auto;}
+.reader-body code{background:var(--navy-pale);color:var(--navy-l);padding:2px 6px;font-family:'Courier New',monospace;font-size:13px;}
+.reader-body pre code{background:none;color:inherit;padding:0;}
+.reader-body ul,.reader-body ol{padding-left:28px;margin:8px 0 12px;}
+.reader-body li{margin-bottom:6px;line-height:1.85;}
+.reader-body a{color:var(--navy-l);text-decoration:underline;}
+.reader-body a:hover{color:var(--red);}
+.reader-body hr{border:none;border-top:2px solid var(--border);margin:28px 0;}
+.reader-body img{max-width:100%;height:auto;display:block;margin:16px auto;box-shadow:var(--sh);}
+.reader-body table{border-collapse:collapse;width:100%;margin:16px 0;}
+.reader-body th,.reader-body td{border:1px solid var(--border);padding:10px 14px;font-size:13px;text-align:left;}
+.reader-body th{background:var(--navy);color:#fff;font-weight:700;}
+.reader-body tr:nth-child(even) td{background:var(--surface-2);}
+
+/* ── READER MORE ARTICLES ── */
+.reader-more{margin-top:60px;padding-top:40px;border-top:2px solid var(--navy);}
+.reader-more-hd{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--txt3);margin-bottom:20px;}
+.reader-more-item{display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid var(--border-l);cursor:pointer;transition:all .15s;border-radius:2px;}
+.reader-more-item:hover{background:var(--surface-2);padding-left:10px;margin:0 -10px;padding-right:10px;}
+.reader-more-info{flex:1;min-width:0;}
+.reader-more-pill{display:inline-block;background:var(--navy);padding:3px 8px;font-family:'Inter',sans-serif;font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#fff;margin-bottom:5px;}
+.reader-more-title{font-family:'Noto Serif KR',serif;font-size:15px;font-weight:600;color:var(--ink);margin-bottom:4px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.reader-more-meta{font-family:'Inter',sans-serif;font-size:10px;color:var(--txt3);}
+.reader-more-arrow{font-size:18px;color:var(--border);flex-shrink:0;transition:color .2s;}
+.reader-more-item:hover .reader-more-arrow{color:var(--navy);}
+
+/* ── NAV 전체보기 ── */
+.mast-nav-all{background:var(--navy)!important;color:#fff!important;flex:0 0 auto!important;padding:11px 22px!important;letter-spacing:.1em;}
+.mast-nav-all::after{display:none!important;}
+.mast-nav-all:hover{background:var(--navy-l)!important;color:#fff!important;}
+
+/* ── SUBSCRIBER LIST MODAL (ADMIN) ── */
+.sub-modal-bg{display:none;position:fixed;inset:0;background:rgba(6,13,24,.65);z-index:800;align-items:center;justify-content:center;}
+.sub-modal-bg.open{display:flex;}
+.sub-modal-box{background:var(--surface);width:600px;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;border-top:3px solid var(--navy);box-shadow:var(--sh2);}
+.sub-modal-hd{background:var(--navy);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.sub-modal-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#fff;}
+.sub-modal-close{background:none;border:none;color:rgba(255,255,255,.6);font-size:18px;cursor:pointer;line-height:1;padding:0;}
+.sub-modal-close:hover{color:#fff;}
+.sub-modal-body{overflow-y:auto;padding:20px 24px;flex:1;}
+.sub-modal-count{font-family:'Inter',sans-serif;font-size:10px;color:var(--txt3);letter-spacing:.06em;margin-bottom:16px;}
+.sub-modal-table{width:100%;border-collapse:collapse;}
+.sub-modal-table th{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);padding:8px 10px;border-bottom:2px solid var(--border);text-align:left;}
+.sub-modal-table td{font-family:'Noto Sans KR',sans-serif;font-size:13px;padding:10px 10px;border-bottom:1px solid var(--border-l);color:var(--txt);}
+.sub-modal-empty{text-align:center;padding:48px 20px;font-family:'Noto Sans KR',sans-serif;font-size:13px;color:var(--txt3);line-height:2;}
+.sub-modal-notice{background:var(--navy-pale);border-left:3px solid var(--navy-l);padding:12px 16px;font-family:'Noto Sans KR',sans-serif;font-size:12px;color:var(--txt2);line-height:1.8;margin-bottom:16px;}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<!-- ADMIN FLOATING BAR -->
+<div class="admin-bar" id="admin-bar">
+  <div class="admin-bar-label">Admin Mode</div>
+  <button class="admin-bar-btn write" onclick="window.location.href='admin_write.html'">✏ 새 글 쓰기</button>
+  <button class="admin-bar-btn cat" onclick="openCatModal()">카테고리 관리</button>
+  <button class="admin-bar-btn cat" onclick="openSubModal()">구독자 목록</button>
+  <button class="admin-bar-btn logout" onclick="adminLogout()">로그아웃</button>
+</div>
+
+<!-- ALL ARTICLES MODAL -->
+<div class="all-modal-bg" id="all-modal">
+  <div class="all-modal-box">
+    <div class="all-modal-hd">
+      <div class="all-modal-title">전체 기사</div>
+      <button class="all-modal-close" onclick="closeAllModal()">✕</button>
+    </div>
+    <div class="all-art-list" id="all-art-list"></div>
+  </div>
+</div>
+
+<!-- SUBSCRIBE MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-eyebrow">Weekly Newsletter</div>
+    <div class="modal-title">매주 화요일,<br>시장을 읽는<br>브리핑</div>
+    <div class="modal-sub">경제·금융·테크·컬처까지. 핵심 스토리만 골라 매주 화요일 오전 9시 발송합니다. 구독자 14만 명과 함께하세요.</div>
+    <input class="modal-input" type="email" placeholder="이메일 주소 입력" id="email-input">
+    <button class="modal-btn" onclick="handleSubscribe()">무료 구독 신청 →</button>
+    <div class="modal-fine">구독은 언제든지 취소할 수 있습니다. 개인정보는 뉴스레터 발송 목적으로만 사용됩니다.</div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+<div class="admin-modal-bg" id="admin-modal">
+  <div class="admin-modal-box">
+    <div class="admin-modal-hd">
+      <div class="admin-modal-title">Administrator Login</div>
+      <button class="admin-modal-close" onclick="closeAdminLogin()">✕</button>
+    </div>
+    <div class="admin-modal-body">
+      <label class="admin-modal-label">아이디</label>
+      <input class="admin-modal-input" type="text" id="admin-id" placeholder="관리자 아이디" autocomplete="off">
+      <label class="admin-modal-label">비밀번호</label>
+      <input class="admin-modal-input" type="password" id="admin-pw" placeholder="비밀번호" onkeydown="if(event.key==='Enter')doAdminLogin()">
+      <button class="admin-modal-btn" onclick="doAdminLogin()">로그인 →</button>
+      <div class="admin-modal-err" id="admin-err">아이디 또는 비밀번호가 올바르지 않습니다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORY MANAGEMENT MODAL -->
+<div class="cat-modal-bg" id="cat-modal">
+  <div class="cat-modal-box">
+    <div class="cat-modal-hd">
+      <div class="cat-modal-title">카테고리 관리</div>
+      <button class="cat-modal-close" onclick="closeCatModal()">✕</button>
+    </div>
+    <div class="cat-modal-body">
+      <div class="cat-list" id="cat-list"></div>
+      <div class="cat-add-row">
+        <input class="cat-add-input" type="text" id="cat-add-input" placeholder="새 카테고리 이름" onkeydown="if(event.key==='Enter')addCategory()">
+        <button class="cat-add-btn" onclick="addCategory()">+ 추가</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUBSCRIBER LIST MODAL (ADMIN) -->
+<div class="sub-modal-bg" id="sub-modal">
+  <div class="sub-modal-box">
+    <div class="sub-modal-hd">
+      <div class="sub-modal-title">뉴스레터 구독자 목록</div>
+      <button class="sub-modal-close" onclick="closeSubModal()">✕</button>
+    </div>
+    <div class="sub-modal-body" id="sub-modal-body">
+      <div class="sub-modal-empty">불러오는 중...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ARTICLE READER OVERLAY -->
+<div class="reader-overlay" id="reader-overlay">
+  <div class="reader-bar">
+    <div class="reader-bar-label">기사 읽기</div>
+    <button class="reader-close-btn" onclick="closeReader()">✕ 닫기</button>
+  </div>
+  <div class="reader-content">
+    <img class="reader-cover" id="reader-cover-img" src="" alt="">
+    <div class="reader-pill" id="reader-pill"></div>
+    <div class="reader-hed" id="reader-hed"></div>
+    <div class="reader-dek" id="reader-dek"></div>
+    <div class="reader-meta">
+      <span id="reader-author"></span>
+      <span class="reader-meta-sep"></span>
+      <span id="reader-date"></span>
+    </div>
+    <div class="reader-body" id="reader-body"></div>
+    <div class="reader-more" id="reader-more">
+      <div class="reader-more-hd">다른 기사 더 읽기</div>
+      <div id="reader-more-list"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">구독 신청 완료!</div>
+
+<!-- MASTHEAD -->
+<div class="mast">
+  <div class="mast-top">
+    <div class="mast-brand">
+      <div class="logo-wrap">
+        <img class="logo-img" src="" alt="뉴스레터 로고">
+        <span class="logo-text">뉴스레터 제목</span>
+      </div>
+      <div class="mast-tagline">경제 · 테크 · 컬처 · 위클리</div>
+    </div>
+    <div class="mast-right">
+      <div class="mast-issue">VOL.12 — SPRING EDITION</div>
+      <div class="mast-sub-btn" onclick="openModal()">뉴스레터 구독</div>
+    </div>
+  </div>
+  <div class="mast-nav" id="mast-nav"></div>
+</div>
+
+<!-- HERO (rendered dynamically) -->
+<section class="hero" id="hero-section">
+  <div class="hero-l-wrap" id="hero-left"></div>
+  <div class="hero-r-list" id="hero-right">
+    <div class="hero-list-hd">최신 기사 목록</div>
+    <div id="hero-right-items"></div>
+  </div>
+</section>
+
+<!-- TOP STORIES -->
+<div class="sec-hd">
+  <div class="sec-hd-label">최신 스토리</div>
+  <div class="sec-hd-sub" onclick="openAllModal()">전체보기 →</div>
+</div>
+<div class="grid3" id="top-stories-grid"></div>
+
+<!-- FEATURED -->
+<div class="sec-hd">
+  <div class="sec-hd-label">심층 분석 — Featured</div>
+  <div class="sec-hd-sub" onclick="openAllModal()">더보기 →</div>
+</div>
+<div class="feat" id="feat-section">
+  <div class="feat-main" id="feat-main-card"></div>
+  <div class="feat-side" id="feat-side-cards"></div>
+</div>
+
+<!-- QUOTE BAND -->
+<div class="quote-band">
+  <div class="quote-mark">"</div>
+  <div class="quote-body">
+    <div class="quote-text">가나다라 마바사아<br>자차카타 파하나다<br>라마바사 아자차카</div>
+    <div class="quote-attr">— 에디터 이름 · 직책</div>
+  </div>
+</div>
+
+<!-- BRIEF -->
+<div class="sec-hd" style="padding-top:36px;">
+  <div class="sec-hd-label">한줄 브리핑 — Brief</div>
+  <div class="sec-hd-sub" onclick="openAllModal()">전체 →</div>
+</div>
+<div class="brief-wrap">
+  <div class="brief-grid" id="brief-grid"></div>
+</div>
+
+<!-- FOOTER -->
+<footer class="foot">
+  <div>
+    <div class="foot-logo">뉴스레터 제목</div>
+    <div class="foot-tag">CURATED FOR THE GENERATION</div>
+    <div class="foot-copy">© 2026 뉴스레터 제목<br>
+      <span class="foot-link" style="display:inline;margin:0;cursor:pointer;" onclick="openModal()">수신거부</span> ·
+      <span class="foot-link" style="display:inline;margin:0;">개인정보처리방침</span>
+      <span class="admin-link" onclick="openAdminLogin()">Admin</span>
+    </div>
+  </div>
+  <div>
+    <div class="foot-col-title">섹션</div>
+    <span class="foot-link" id="foot-nav-links"></span>
+  </div>
+  <div>
+    <div class="foot-col-title">정보</div>
+    <span class="foot-link" onclick="openModal()">구독 관리</span>
+    <span class="foot-link" onclick="openAllModal()">전체 기사</span>
+    <span class="foot-link">광고 문의</span>
+  </div>
+</footer>
+
+<script>
+/* ════════════════════════════════════════
+   STATE & STORAGE
+════════════════════════════════════════ */
+const DEFAULT_CATS=['카테고리 1','카테고리 2','카테고리 3','카테고리 4','카테고리 5','카테고리 6'];
+
+function getArticles(){
+  try{return JSON.parse(localStorage.getItem('nova_articles')||'[]');}catch(e){return[];}
+}
+function getCategories(){
+  try{
+    const c=JSON.parse(localStorage.getItem('nova_categories')||'null');
+    return Array.isArray(c)&&c.length?c:[...DEFAULT_CATS];
+  }catch(e){return[...DEFAULT_CATS];}
+}
+function saveCategories(arr){localStorage.setItem('nova_categories',JSON.stringify(arr));}
+function saveArticles(arr){localStorage.setItem('nova_articles',JSON.stringify(arr));}
+
+function getPublished(){
+  return getArticles()
+    .filter(a=>a.published)
+    .sort((a,b)=>new Date(b.date||b.updatedAt||0)-new Date(a.date||a.updatedAt||0));
+}
+
+function formatKoreanDate(dateStr){
+  if(!dateStr)return '';
+  const d=new Date(dateStr.includes('T')?dateStr:dateStr+'T00:00:00');
+  if(isNaN(d))return dateStr;
+  return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일`;
+}
+
+function todayKorean(){
+  const d=new Date();
+  return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일`;
+}
+
+const PLACEHOLDER={
+  title:'기사 제목 자리입니다',
+  author:'기자 이름',
+  dek:'가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마.',
+  section:'카테고리',
+  id:null,
+  date:null
+};
+
+function ph(art,field){
+  if(art&&art[field]!==undefined&&art[field]!=='')return art[field];
+  return PLACEHOLDER[field]||'';
+}
+
+/* ════════════════════════════════════════
+   ADMIN MODE
+════════════════════════════════════════ */
+function isAdmin(){return sessionStorage.getItem('nova_admin')==='1';}
+
+function enterAdminMode(){
+  document.body.classList.add('admin-mode');
+  document.getElementById('admin-bar').classList.add('visible');
+  renderAll();
+}
+
+function adminLogout(){
+  sessionStorage.removeItem('nova_admin');
+  document.body.classList.remove('admin-mode');
+  document.getElementById('admin-bar').classList.remove('visible');
+  renderAll();
+}
+
+/* ════════════════════════════════════════
+   ADMIN CARD ACTION BUTTONS
+════════════════════════════════════════ */
+function adminActionsHTML(art){
+  if(!art||!art.id)return '';
+  return `<div class="admin-card-actions">
+    <button class="admin-card-btn edit" onclick="event.stopPropagation();editArticle('${art.id}')" title="편집">✏</button>
+    <button class="admin-card-btn del" onclick="event.stopPropagation();deleteArticleFromHome('${art.id}')" title="삭제">✕</button>
+  </div>`;
+}
+
+function editArticle(id){
+  window.location.href='admin_write.html?id='+encodeURIComponent(id);
+}
+
+function deleteArticleFromHome(id){
+  if(!confirm('이 기사를 삭제하시겠습니까?'))return;
+  let arts=getArticles().filter(a=>a.id!==id);
+  saveArticles(arts);
+  deleteArticleFromCloud(id);
+  renderAll();
+  showToast('삭제되었습니다');
+}
+
+/* ════════════════════════════════════════
+   ARTICLE READER
+════════════════════════════════════════ */
+function openReader(art){
+  if(!art)return;
+  const overlay=document.getElementById('reader-overlay');
+  const coverImg=document.getElementById('reader-cover-img');
+  if(art.cover){coverImg.src=art.cover;coverImg.classList.add('show');}
+  else{coverImg.src='';coverImg.classList.remove('show');}
+  document.getElementById('reader-pill').textContent=art.section||'기사';
+  document.getElementById('reader-hed').textContent=art.title||'';
+  document.getElementById('reader-dek').textContent=art.dek||'';
+  document.getElementById('reader-author').textContent=art.author||'';
+  document.getElementById('reader-date').textContent=formatKoreanDate(art.date)||todayKorean();
+  document.getElementById('reader-body').innerHTML=art.body||'<p>내용이 없습니다.</p>';
+  overlay.scrollTop=0;
+  overlay.classList.add('open');
+  document.body.style.overflow='hidden';
+  renderReaderMore(art.id);
+}
+
+function renderReaderMore(currentId){
+  const arts=getPublished().filter(a=>a.id!==currentId);
+  const list=document.getElementById('reader-more-list');
+  const wrap=document.getElementById('reader-more');
+  if(!arts.length){wrap.style.display='none';return;}
+  wrap.style.display='';
+  list.innerHTML=arts.map(a=>`
+    <div class="reader-more-item" onclick="openReader(getArticleById('${a.id}'))">
+      <div class="reader-more-info">
+        <div class="reader-more-pill">${a.section||'기사'}</div>
+        <div class="reader-more-title">${a.title||'(제목 없음)'}</div>
+        <div class="reader-more-meta">${a.author||''} · ${formatKoreanDate(a.date)||''}</div>
+      </div>
+      <div class="reader-more-arrow">↗</div>
+    </div>`).join('');
+}
+
+function closeReader(){
+  document.getElementById('reader-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function handleArticleClick(art){
+  if(isAdmin()){
+    // In admin mode, clicking opens reader too (edit buttons are separate)
+    openReader(art);
+  } else {
+    openReader(art);
+  }
+}
+
+/* ════════════════════════════════════════
+   NAV RENDER
+════════════════════════════════════════ */
+function renderNav(){
+  const cats=getCategories();
+  const nav=document.getElementById('mast-nav');
+  nav.innerHTML=cats.map((c,i)=>
+    `<div class="mast-nav-item${i===0?' active':''}" onclick="filterSection(this,'${c}')">${c}</div>`
+  ).join('')
+  +`<div class="mast-nav-item mast-nav-all" onclick="openAllModal()">전체보기</div>`;
+
+  // Footer nav
+  const footNav=document.getElementById('foot-nav-links');
+  if(footNav){
+    footNav.outerHTML=cats.slice(0,4).map(c=>
+      `<span class="foot-link" onclick="filterSection(null,'${c}')">${c}</span>`
+    ).join('');
+  }
+}
+
+function filterSection(el,sec){
+  document.querySelectorAll('.mast-nav-item').forEach(n=>n.classList.remove('active'));
+  if(el)el.classList.add('active');
+}
+
+/* ════════════════════════════════════════
+   HERO RENDER
+════════════════════════════════════════ */
+function renderHero(arts){
+  // Left: 2 hero cards (arts[0], arts[1])
+  const heroLeft=document.getElementById('hero-left');
+  heroLeft.innerHTML='';
+  [0,1].forEach(i=>{
+    const art=arts[i]||null;
+    const card=document.createElement('div');
+    card.className='hero-card';
+    if(art){card.onclick=()=>handleArticleClick(art);}
+    card.innerHTML=`
+      ${adminActionsHTML(art)}
+      <div>
+        <div class="hero-card-eyebrow">
+          <div class="hero-pill">${i===0?'COVER':'COVER'}</div>
+          <div class="hero-issue-line">최신 스토리</div>
+        </div>
+        <div class="hero-card-hed">${ph(art,'title')}</div>
+        <div class="hero-card-dek">${ph(art,'dek')}</div>
+      </div>
+      <div class="hero-byline">
+        <span class="hero-byline-name">${ph(art,'author')}</span>
+        <span class="hero-byline-sep"></span>
+        <span class="hero-byline-time">${art?formatKoreanDate(art.date)||todayKorean():todayKorean()}</span>
+      </div>`;
+    heroLeft.appendChild(card);
+  });
+
+  // Right: 6 list items (arts[0]–arts[5])
+  const heroRightItems=document.getElementById('hero-right-items');
+  heroRightItems.innerHTML='';
+  for(let i=0;i<6;i++){
+    const art=arts[i]||null;
+    const item=document.createElement('div');
+    item.className='hero-list-item';
+    if(art){item.onclick=()=>handleArticleClick(art);}
+    item.innerHTML=`
+      ${adminActionsHTML(art)}
+      <div class="hero-list-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="hero-list-info">
+        <div class="hero-list-cat">${ph(art,'section')}</div>
+        <div class="hero-list-title">${ph(art,'title')}</div>
+        <div class="hero-list-byline">${ph(art,'author')}</div>
+      </div>
+      <div class="hero-list-arrow">↗</div>`;
+    heroRightItems.appendChild(item);
+  }
+}
+
+/* ════════════════════════════════════════
+   TOP STORIES (arts[2]–[4])
+════════════════════════════════════════ */
+function renderTopStories(arts){
+  const grid=document.getElementById('top-stories-grid');
+  const styles=['accent','dark',''];
+  grid.innerHTML='';
+  [2,3,4].forEach((idx,i)=>{
+    const art=arts[idx]||null;
+    const div=document.createElement('div');
+    div.className='card '+(styles[i]||'');
+    if(art){div.onclick=()=>handleArticleClick(art);}
+    div.innerHTML=`
+      ${adminActionsHTML(art)}
+      <div class="card-num">0${i+1}</div>
+      <div class="card-cat">${ph(art,'section')}</div>
+      <div class="card-title">${ph(art,'title')}</div>
+      <div class="card-body">${ph(art,'dek')}</div>
+      <div class="card-byline">${ph(art,'author')}</div>
+      <div class="card-arrow">↗</div>`;
+    grid.appendChild(div);
+  });
+}
+
+/* ════════════════════════════════════════
+   FEATURED (arts[5]=main, arts[6],[7]=side)
+════════════════════════════════════════ */
+function renderFeatured(arts){
+  const mainCard=document.getElementById('feat-main-card');
+  const sideCards=document.getElementById('feat-side-cards');
+  const art5=arts[5]||null;
+  mainCard.innerHTML=`
+    ${adminActionsHTML(art5)}
+    <div class="card-cat">${ph(art5,'section')}</div>
+    <div class="card-title">${ph(art5,'title')}</div>
+    <div class="card-body">${ph(art5,'dek')}</div>
+    <div class="feat-byline">${ph(art5,'author')}</div>
+    <div class="card-arrow">↗</div>`;
+  if(art5){mainCard.onclick=()=>handleArticleClick(art5);}
+  else{mainCard.onclick=null;}
+
+  sideCards.innerHTML='';
+  [6,7].forEach((idx,i)=>{
+    const art=arts[idx]||null;
+    const div=document.createElement('div');
+    div.className='feat-side-item';
+    if(art){div.onclick=()=>handleArticleClick(art);}
+    div.innerHTML=`
+      ${adminActionsHTML(art)}
+      <div class="card-num">0${i+1}</div>
+      <div class="card-cat">${ph(art,'section')}</div>
+      <div class="card-title">${ph(art,'title')}</div>
+      <div class="card-body">${ph(art,'dek')}</div>
+      <div class="card-byline">${ph(art,'author')}</div>
+      <div class="card-arrow">↗</div>`;
+    sideCards.appendChild(div);
+  });
+}
+
+/* ════════════════════════════════════════
+   BRIEF (arts[8]–[11])
+════════════════════════════════════════ */
+function renderBrief(arts){
+  const grid=document.getElementById('brief-grid');
+  grid.innerHTML='';
+  [8,9,10,11].forEach((idx,i)=>{
+    const art=arts[idx]||null;
+    const div=document.createElement('div');
+    div.className='brief-card';
+    if(art){div.onclick=()=>handleArticleClick(art);}
+    div.innerHTML=`
+      ${adminActionsHTML(art)}
+      <div class="brief-n">0${i+1}</div>
+      <div class="brief-title">${ph(art,'title')}</div>
+      <div class="brief-body">${ph(art,'dek')}</div>
+      <div class="brief-byline">${ph(art,'author')}</div>`;
+    grid.appendChild(div);
+  });
+}
+
+/* ════════════════════════════════════════
+   RENDER ALL
+════════════════════════════════════════ */
+function renderAll(){
+  const arts=getPublished();
+  renderNav();
+  renderHero(arts);
+  renderTopStories(arts);
+  renderFeatured(arts);
+  renderBrief(arts);
+  if(isAdmin()){
+    document.body.classList.add('admin-mode');
+    document.getElementById('admin-bar').classList.add('visible');
+  }
+}
+
+/* ════════════════════════════════════════
+   ALL ARTICLES MODAL
+════════════════════════════════════════ */
+function openAllModal(){
+  const arts=getPublished();
+  const list=document.getElementById('all-art-list');
+  if(!arts.length){
+    list.innerHTML='<div style="padding:32px;text-align:center;font-family:\'Noto Sans KR\',sans-serif;font-size:13px;color:var(--txt3);">발행된 기사가 없습니다.</div>';
+  } else {
+    list.innerHTML=arts.map((a,i)=>`
+      <div class="all-art-item" onclick="handleArticleClick(getArticleById('${a.id}'))">
+        <div class="all-art-num">${String(i+1).padStart(2,'0')}</div>
+        <div class="all-art-info">
+          <div class="all-art-pill">${a.section||'기사'}</div>
+          <div class="all-art-title">${a.title||'(제목 없음)'}</div>
+          <div class="all-art-time">${a.author||''} · ${formatKoreanDate(a.date)||todayKorean()}</div>
+        </div>
+        <div class="all-art-arrow">↗</div>
+        ${isAdmin()?`<div style="display:flex;gap:4px;margin-left:8px;">
+          <button style="background:var(--navy);border:none;color:#fff;padding:4px 8px;font-size:10px;cursor:pointer;" onclick="event.stopPropagation();editArticle('${a.id}')">✏</button>
+          <button style="background:var(--red);border:none;color:#fff;padding:4px 8px;font-size:10px;cursor:pointer;" onclick="event.stopPropagation();deleteArticleFromHome('${a.id}');closeAllModal();">✕</button>
+        </div>`:''}
+      </div>`).join('');
+  }
+  document.getElementById('all-modal').classList.add('open');
+}
+function closeAllModal(){document.getElementById('all-modal').classList.remove('open');}
+document.getElementById('all-modal').addEventListener('click',function(e){if(e.target===this)closeAllModal();});
+
+function getArticleById(id){
+  return getArticles().find(a=>a.id===id)||null;
+}
+
+/* ════════════════════════════════════════
+   FIREBASE CLOUD SYNC
+   ─ 기사를 전 세계에 공개하려면 아래 URL을 설정하세요.
+   ─ Firebase 콘솔 → Realtime Database URL 복사 후 붙여넣기
+   ─ 예: https://your-project-default-rtdb.firebaseio.com
+════════════════════════════════════════ */
+const FIREBASE_DB_URL='https://novalaw-a437a-default-rtdb.firebaseio.com';
+
+function hasFirebase(){
+  return FIREBASE_DB_URL&&FIREBASE_DB_URL!=='YOUR_FIREBASE_DB_URL_HERE';
+}
+
+async function loadArticlesFromCloud(){
+  if(!hasFirebase())return;
+  try{
+    const res=await fetch(FIREBASE_DB_URL+'/articles.json');
+    if(!res.ok)return;
+    const data=await res.json();
+    if(data&&typeof data==='object'){
+      const arts=Object.values(data).filter(Boolean);
+      saveArticles(arts);
+      renderAll();
+    }
+  }catch(e){console.error('Firebase load error:',e);}
+}
+
+async function saveArticleToCloud(art){
+  if(!hasFirebase())return;
+  try{
+    await fetch(FIREBASE_DB_URL+'/articles/'+art.id+'.json',{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(art)
+    });
+  }catch(e){console.error('Firebase save error:',e);}
+}
+
+async function deleteArticleFromCloud(id){
+  if(!hasFirebase())return;
+  try{
+    await fetch(FIREBASE_DB_URL+'/articles/'+id+'.json',{method:'DELETE'});
+  }catch(e){console.error('Firebase delete error:',e);}
+}
+
+async function saveSubscriberToCloud(email){
+  if(!hasFirebase())return;
+  try{
+    const key='sub_'+Date.now()+'_'+Math.random().toString(36).slice(2,5);
+    await fetch(FIREBASE_DB_URL+'/subscribers/'+key+'.json',{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,date:new Date().toISOString(),status:'active'})
+    });
+  }catch(e){console.error('Subscriber save error:',e);}
+}
+
+/* ════════════════════════════════════════
+   SUBSCRIBER LIST MODAL (ADMIN)
+════════════════════════════════════════ */
+async function openSubModal(){
+  if(!isAdmin())return;
+  document.getElementById('sub-modal').classList.add('open');
+  const body=document.getElementById('sub-modal-body');
+
+  if(!hasFirebase()){
+    body.innerHTML=`<div class="sub-modal-notice">
+      Firebase가 설정되지 않아 구독자 목록을 불러올 수 없습니다.<br>
+      index.html 파일에서 <strong>FIREBASE_DB_URL</strong> 값을 설정하면 구독자 목록을 확인할 수 있습니다.
+    </div><div class="sub-modal-empty">Firebase 설정 후 이용 가능합니다.</div>`;
+    return;
+  }
+
+  body.innerHTML='<div class="sub-modal-empty">불러오는 중...</div>';
+  try{
+    const res=await fetch(FIREBASE_DB_URL+'/subscribers.json');
+    const data=await res.json();
+    if(!data||typeof data!=='object'||!Object.keys(data).length){
+      body.innerHTML='<div class="sub-modal-empty">등록된 구독자가 없습니다.</div>';
+      return;
+    }
+    const subs=Object.values(data).filter(Boolean)
+      .sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
+    body.innerHTML=`
+      <div class="sub-modal-count">총 <strong>${subs.length}</strong>명의 구독자</div>
+      <table class="sub-modal-table">
+        <thead><tr><th>#</th><th>이메일</th><th>구독일</th><th>상태</th></tr></thead>
+        <tbody>${subs.map((s,i)=>`
+          <tr>
+            <td style="color:var(--txt3);font-family:'Inter',sans-serif;font-size:11px;">${i+1}</td>
+            <td>${s.email||'-'}</td>
+            <td style="font-family:'Inter',sans-serif;font-size:11px;color:var(--txt3);">${s.date?new Date(s.date).toLocaleDateString('ko-KR'):'-'}</td>
+            <td style="font-family:'Inter',sans-serif;font-size:10px;text-transform:uppercase;">${s.status||'active'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+  }catch(e){
+    body.innerHTML='<div class="sub-modal-empty">데이터를 불러오지 못했습니다.<br>Firebase 설정을 확인해 주세요.</div>';
+  }
+}
+
+function closeSubModal(){
+  document.getElementById('sub-modal').classList.remove('open');
+}
+document.getElementById('sub-modal').addEventListener('click',function(e){if(e.target===this)closeSubModal();});
+
+/* ════════════════════════════════════════
+   SUBSCRIBE MODAL
+════════════════════════════════════════ */
+function openModal(){document.getElementById('modal').classList.add('open');}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    closeModal();
+    closeAllModal();
+    closeAdminLogin();
+    closeCatModal();
+    closeReader();
+    closeSubModal();
+  }
+});
+
+const SCRIPT_URL='YOUR_APPS_SCRIPT_URL_HERE';
+
+async function handleSubscribe(){
+  const emailEl=document.getElementById('email-input');
+  const btn=document.querySelector('.modal-btn');
+  const email=emailEl.value.trim();
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    emailEl.style.borderColor='var(--red)';emailEl.focus();return;
+  }
+  emailEl.style.borderColor='';
+  if(!SCRIPT_URL||SCRIPT_URL==='YOUR_APPS_SCRIPT_URL_HERE'){
+    closeModal();showToast('구독 신청 완료!');
+    saveSubscriberToCloud(email);
+    emailEl.value='';return;
+  }
+  const orig=btn.textContent;
+  btn.textContent='처리 중...';btn.disabled=true;
+  try{
+    await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'email='+encodeURIComponent(email)});
+    closeModal();showToast('구독 신청이 완료되었습니다 ✓');
+    saveSubscriberToCloud(email);
+    emailEl.value='';
+  }catch(err){showToast('오류가 발생했습니다. 다시 시도해 주세요.');}
+  finally{btn.textContent=orig;btn.disabled=false;}
+}
+
+/* ════════════════════════════════════════
+   ADMIN LOGIN MODAL
+════════════════════════════════════════ */
+const _AH='d6350dc2266c672805352973554e74edc04090ea84e98ed32b068f6457b6ba32';
+const _PH='0a025b9efbc9a5fa1a9eed47763052b70ee6a5a970262de0b4e491c40ee35acb';
+
+async function sha256(str){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+function openAdminLogin(){
+  document.getElementById('admin-modal').classList.add('open');
+  document.getElementById('admin-id').value='';
+  document.getElementById('admin-pw').value='';
+  document.getElementById('admin-err').classList.remove('show');
+  document.querySelectorAll('.admin-modal-input').forEach(el=>el.classList.remove('err'));
+  setTimeout(()=>document.getElementById('admin-id').focus(),100);
+}
+function closeAdminLogin(){
+  document.getElementById('admin-modal').classList.remove('open');
+}
+document.getElementById('admin-modal').addEventListener('click',function(e){if(e.target===this)closeAdminLogin();});
+
+async function doAdminLogin(){
+  const id=document.getElementById('admin-id').value.trim();
+  const pw=document.getElementById('admin-pw').value;
+  const errEl=document.getElementById('admin-err');
+  document.querySelectorAll('.admin-modal-input').forEach(el=>el.classList.remove('err'));
+  errEl.classList.remove('show');
+  const [idH,pwH]=await Promise.all([sha256(id),sha256(pw)]);
+  if(idH===_AH&&pwH===_PH){
+    sessionStorage.setItem('nova_admin','1');
+    closeAdminLogin();
+    enterAdminMode();
+  } else {
+    document.getElementById('admin-id').classList.add('err');
+    document.getElementById('admin-pw').classList.add('err');
+    errEl.classList.add('show');
+    document.getElementById('admin-pw').value='';
+    document.getElementById('admin-pw').focus();
+  }
+}
+
+/* ════════════════════════════════════════
+   CATEGORY MODAL
+════════════════════════════════════════ */
+function openCatModal(){
+  renderCatList();
+  document.getElementById('cat-modal').classList.add('open');
+}
+function closeCatModal(){
+  document.getElementById('cat-modal').classList.remove('open');
+}
+document.getElementById('cat-modal').addEventListener('click',function(e){if(e.target===this)closeCatModal();});
+
+function renderCatList(){
+  const cats=getCategories();
+  const list=document.getElementById('cat-list');
+  if(!cats.length){
+    list.innerHTML='<div style="font-family:\'Noto Sans KR\',sans-serif;font-size:12px;color:var(--txt3);text-align:center;padding:12px;">카테고리가 없습니다.</div>';
+    return;
+  }
+  list.innerHTML=cats.map((c,i)=>`
+    <div class="cat-item" id="cat-item-${i}">
+      <span class="cat-item-name" id="cat-name-${i}">${c}</span>
+      <input class="cat-item-input" id="cat-input-${i}" value="${c}" style="display:none;" onkeydown="if(event.key==='Enter')saveCatEdit(${i});if(event.key==='Escape')cancelCatEdit(${i})">
+      <button class="cat-item-edit" onclick="startCatEdit(${i})" id="cat-edit-btn-${i}" title="이름 변경">✏</button>
+      <button class="cat-item-del" onclick="deleteCategory(${i})" title="삭제">✕</button>
+    </div>`).join('');
+}
+
+function startCatEdit(i){
+  document.getElementById('cat-name-'+i).style.display='none';
+  document.getElementById('cat-input-'+i).style.display='';
+  document.getElementById('cat-edit-btn-'+i).textContent='✓';
+  document.getElementById('cat-edit-btn-'+i).onclick=()=>saveCatEdit(i);
+  document.getElementById('cat-input-'+i).focus();
+  document.getElementById('cat-input-'+i).select();
+}
+function saveCatEdit(i){
+  const newName=document.getElementById('cat-input-'+i).value.trim();
+  if(!newName)return;
+  const cats=getCategories();
+  cats[i]=newName;
+  saveCategories(cats);
+  renderCatList();
+  renderNav();
+}
+function cancelCatEdit(i){
+  renderCatList();
+}
+function deleteCategory(i){
+  const cats=getCategories();
+  if(!confirm(`"${cats[i]}" 카테고리를 삭제하시겠습니까?`))return;
+  cats.splice(i,1);
+  saveCategories(cats);
+  renderCatList();
+  renderNav();
+}
+function addCategory(){
+  const input=document.getElementById('cat-add-input');
+  const name=input.value.trim();
+  if(!name)return;
+  const cats=getCategories();
+  if(cats.includes(name)){showToast('이미 존재하는 카테고리입니다');return;}
+  cats.push(name);
+  saveCategories(cats);
+  input.value='';
+  renderCatList();
+  renderNav();
+}
+
+/* ════════════════════════════════════════
+   SCROLL PROGRESS
+════════════════════════════════════════ */
+window.addEventListener('scroll',()=>{
+  const pct=(window.scrollY/(document.body.scrollHeight-window.innerHeight))*100;
+  document.getElementById('progress').style.width=pct+'%';
+});
+
+/* ════════════════════════════════════════
+   TOAST
+════════════════════════════════════════ */
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg||'완료!';
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+/* ════════════════════════════════════════
+   INIT
+════════════════════════════════════════ */
+(function init(){
+  renderAll();
+  if(isAdmin())enterAdminMode();
+  loadArticlesFromCloud();
+})();
+</script>
+</body>
+</html>
