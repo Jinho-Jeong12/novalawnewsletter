@@ -746,7 +746,7 @@ body{background:var(--bg);font-family:'Noto Sans KR','Inter',sans-serif;color:va
 <script>
 /* ── AUTH CHECK ── */
 if(sessionStorage.getItem('nova_admin')!=='1'){
-  window.location.href='newsletter_main.html';
+  window.location.href='newsletter_main.html?redirect=admin_write.html';
 }
 
 /* ── STATE ── */
