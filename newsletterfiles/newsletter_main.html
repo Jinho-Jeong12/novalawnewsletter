@@ -1954,6 +1954,8 @@ function renderAll(){
   if(isAdmin()){
     document.body.classList.add('admin-mode');
     document.getElementById('admin-bar').classList.add('visible');
+  } else if(new URLSearchParams(location.search).get('redirect')){
+    setTimeout(openAdminLogin, 300);
   }
 }
 
@@ -2071,6 +2073,8 @@ function doAdminLogin(){
   if(id===_AID&&pw===_APW){
     sessionStorage.setItem('nova_admin','1');
     closeAdminLogin();
+    const _redirect=new URLSearchParams(location.search).get('redirect');
+    if(_redirect){window.location.href=_redirect;return;}
     enterAdminMode();
   } else {
     document.getElementById('admin-id').classList.add('err');
