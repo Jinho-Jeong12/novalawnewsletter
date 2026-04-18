@@ -1,0 +1,2214 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>뉴스레터 제목 Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#EEF2F7;
+  --surface:#FFFFFF;
+  --surface-2:#F6F9FC;
+  --navy:#0A1628;
+  --navy-l:#1B3870;
+  --navy-pale:#ECF0F9;
+  --navy-deep:#060D18;
+  --red:#C83820;
+  --red-d:#A82E1A;
+  --ink:#0D1829;
+  --txt:#1E2A3B;
+  --txt2:#4B5A6B;
+  --txt3:#8FA0B4;
+  --border:#D6E0EC;
+  --border-l:#EEF2F7;
+  --sh:0 1px 3px rgba(15,35,71,.06),0 4px 14px rgba(15,35,71,.05);
+  --sh2:0 4px 16px rgba(15,35,71,.12),0 2px 6px rgba(15,35,71,.06);
+  --admin-bar-h:44px;
+}
+body{background:var(--bg);font-family:'Noto Sans KR','Inter',sans-serif;color:var(--txt);}
+body.admin-mode{padding-top:var(--admin-bar-h);}
+
+/* ── ADMIN FLOATING BAR ── */
+.admin-bar{
+  display:none;position:fixed;top:0;left:0;right:0;height:var(--admin-bar-h);
+  background:var(--navy-deep);z-index:500;
+  align-items:center;padding:0 20px;gap:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
+}
+.admin-bar.visible{display:flex;}
+.admin-bar-label{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.35);margin-right:6px;
+}
+.admin-bar-btn{
+  padding:6px 14px;font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border:none;
+  transition:all .2s;
+}
+.admin-bar-btn.write{background:var(--red);color:#fff;}
+.admin-bar-btn.write:hover{background:var(--red-d);}
+.admin-bar-btn.cat{background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);}
+.admin-bar-btn.cat:hover{background:rgba(255,255,255,.22);color:#fff;}
+.admin-bar-btn.logout{background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.55);margin-left:auto;}
+.admin-bar-btn.logout:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.4);}
+
+/* ── MASTHEAD ── */
+.mast{
+  background:var(--surface);
+  border-bottom:3px solid var(--navy);
+  box-shadow:0 2px 10px rgba(15,35,71,.08);
+  padding:0 40px;
+  position:sticky;top:0;z-index:100;
+}
+body.admin-mode .mast{top:var(--admin-bar-h);}
+.mast-top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 0 14px;
+}
+
+/* ── LOGO ── */
+.mast-brand{display:flex;flex-direction:column;gap:3px;}
+.logo-wrap{display:flex;align-items:center;}
+.logo-img{
+  height:42px;width:auto;
+  display:none;
+}
+.logo-img[src]:not([src=""]){display:block;}
+.logo-img[src]:not([src=""])~.logo-text{display:none;}
+.logo-text{
+  font-family:'Inter',sans-serif;font-size:22px;font-weight:800;
+  color:var(--navy);letter-spacing:-.03em;line-height:1;
+  text-decoration:none;cursor:pointer;
+}
+.mast-tagline{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:500;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--txt3);
+}
+
+.mast-right{display:flex;align-items:center;gap:20px;}
+.mast-issue{
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:500;
+  letter-spacing:.06em;color:var(--txt3);
+}
+.mast-sub-btn{
+  display:inline-block;background:var(--red);border:none;
+  padding:10px 22px;
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:#fff;
+  cursor:pointer;transition:background .2s;text-decoration:none;
+}
+.mast-sub-btn:hover{background:var(--red-d);}
+.mast-all-btn{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--navy);
+  border:1px solid var(--navy);padding:8px 16px;cursor:pointer;
+  transition:background .2s,color .2s;white-space:nowrap;
+}
+.mast-all-btn:hover{background:var(--navy);color:#fff;}
+
+/* ── NAV ── */
+.mast-nav{
+  display:flex;
+  border-top:1px solid var(--border-l);
+  margin:0 -40px;
+  background:var(--surface);
+}
+.mast-nav-item{
+  flex:1;padding:11px 0;text-align:center;
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--txt3);
+  cursor:pointer;position:relative;overflow:hidden;transition:color .2s;
+  border-right:1px solid var(--border-l);
+}
+.mast-nav-item:last-child{border-right:none;}
+.mast-nav-item::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:var(--navy);transform:scaleX(0);transition:transform .22s;
+}
+.mast-nav-item.active::after,.mast-nav-item:hover::after{transform:scaleX(1);}
+.mast-nav-item.active{color:var(--navy);}
+.mast-nav-item:hover{color:var(--navy-l);}
+
+/* ── HERO ── */
+.hero{
+  display:grid;grid-template-columns:60% 40%;
+  background:var(--surface);
+  box-shadow:var(--sh);
+  margin:20px;
+}
+
+/* Left: 2 stacked articles */
+.hero-l-wrap{
+  display:flex;flex-direction:column;
+  border-right:1px solid var(--border);
+}
+.hero-card{
+  flex:1;padding:32px 36px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  cursor:pointer;transition:background .22s;
+  position:relative;overflow:hidden;
+  min-height:210px;
+}
+.hero-card:first-child{border-bottom:1px solid var(--border);}
+.hero-card:hover{background:var(--surface-2);}
+.hero-card-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.hero-pill{
+  background:var(--navy);padding:5px 14px;
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:#fff;
+}
+.hero-issue-line{
+  font-family:'Inter',sans-serif;font-size:9px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--txt3);
+}
+.hero-card-hed{
+  font-family:'Noto Serif KR',serif;font-size:27px;font-weight:700;
+  line-height:1.3;letter-spacing:-.01em;color:var(--ink);margin-bottom:10px;
+}
+.hero-card-hed em{font-style:normal;}
+.hero-card-dek{
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:300;
+  line-height:1.85;color:var(--txt2);margin-bottom:18px;
+}
+.hero-byline{display:flex;align-items:center;gap:10px;}
+.hero-byline-name{
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.04em;color:var(--txt);
+}
+.hero-byline-sep{width:1px;height:10px;background:var(--border);}
+.hero-byline-time{font-family:'Inter',sans-serif;font-size:11px;color:var(--txt3);}
+
+/* Right: Article list */
+.hero-r-list{
+  background:var(--surface-2);
+  display:flex;flex-direction:column;
+}
+.hero-list-hd{
+  padding:16px 22px 13px;
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--txt3);border-bottom:2px solid var(--navy);
+  background:var(--surface);
+}
+.hero-list-item{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:14px 18px;
+  border-bottom:1px solid var(--border-l);
+  cursor:pointer;transition:background .2s;
+  flex:1;position:relative;
+}
+.hero-list-item:last-child{border-bottom:none;}
+.hero-list-item:hover{background:#EDF2F8;}
+.hero-list-num{
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  color:var(--border);flex-shrink:0;margin-top:3px;width:20px;
+}
+.hero-list-info{flex:1;}
+.hero-list-cat{
+  font-family:'Inter',sans-serif;font-size:8px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--navy-l);margin-bottom:4px;
+}
+.hero-list-title{
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;
+  line-height:1.4;color:var(--ink);margin-bottom:5px;
+}
+.hero-list-byline{
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:600;
+  color:var(--txt2);
+}
+.hero-list-arrow{
+  font-size:14px;color:var(--border);
+  transition:color .2s;flex-shrink:0;margin-top:3px;
+}
+.hero-list-item:hover .hero-list-arrow{color:var(--navy);}
+
+/* ── SECTION HEADER ── */
+.sec-hd{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  padding:28px 20px 14px;
+  margin:20px 20px 0;
+  border-bottom:2px solid var(--navy);
+}
+.sec-hd-label{
+  font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;
+  color:var(--navy);line-height:1;letter-spacing:-.01em;
+}
+.sec-hd-sub{
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);
+  padding-bottom:2px;cursor:pointer;transition:all .2s;
+  border-bottom:1px solid transparent;
+}
+.sec-hd-sub:hover{color:var(--navy);border-bottom-color:var(--navy);}
+
+/* ── CARD GRID ── */
+.grid3{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  background:transparent;
+  margin:10px 20px 0;
+}
+.card{
+  background:var(--surface);padding:26px 22px 40px;
+  position:relative;cursor:pointer;
+  transition:box-shadow .22s,transform .2s,border-top-color .2s;
+  overflow:hidden;
+  box-shadow:var(--sh);
+  border-top:3px solid transparent;
+}
+.card:hover{box-shadow:var(--sh2);transform:translateY(-2px);border-top-color:var(--navy);}
+.card:hover .card-arrow{color:var(--navy);transform:translate(4px,-4px);}
+
+.card.accent{background:var(--navy);border-top-color:var(--navy-deep);}
+.card.accent:hover{background:var(--navy-deep);border-top-color:rgba(255,255,255,.2);}
+.card.accent .card-num{color:rgba(255,255,255,.12);}
+.card.accent .card-cat{color:rgba(255,255,255,.55);}
+.card.accent .card-title{color:#fff;}
+.card.accent .card-body{color:rgba(255,255,255,.72);}
+.card.accent .card-arrow{color:rgba(255,255,255,.25);}
+.card.accent:hover .card-arrow{color:#fff;transform:translate(4px,-4px);}
+
+.card.dark{background:var(--surface-2);border-top-color:transparent;}
+.card.dark:hover{background:#EDF2F8;border-top-color:var(--navy);}
+.card.dark .card-num{color:var(--navy-pale);}
+.card.dark .card-cat{color:var(--txt3);}
+.card.dark .card-title{color:var(--ink);}
+.card.dark .card-body{color:var(--txt2);}
+.card.dark .card-arrow{color:var(--border);}
+.card.dark:hover .card-arrow{color:var(--navy);transform:translate(4px,-4px);}
+
+.card-num{
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:700;
+  color:var(--navy-pale);margin-bottom:12px;letter-spacing:.08em;
+}
+.card-cat{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--txt3);margin-bottom:10px;
+}
+.card-title{
+  font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:700;
+  line-height:1.4;color:var(--ink);margin-bottom:12px;
+}
+.card-body{
+  font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:300;
+  line-height:1.9;color:var(--txt2);
+}
+.card-arrow{
+  position:absolute;bottom:18px;right:20px;font-size:18px;
+  color:var(--border);transition:color .22s,transform .25s;
+}
+.card-byline{
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:600;
+  color:var(--txt2);margin-top:12px;letter-spacing:.02em;
+}
+.card.accent .card-byline{color:rgba(255,255,255,.7);}
+.card.dark .card-byline{color:var(--txt2);}
+.feat-byline{
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:600;
+  color:var(--txt2);margin-top:18px;letter-spacing:.02em;
+}
+.feat-side-item .card-byline{font-size:10px;margin-top:8px;}
+.brief-byline{
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:600;
+  color:var(--txt2);margin-top:8px;
+}
+
+/* ── FEATURE SPLIT ── */
+.feat{
+  display:grid;grid-template-columns:1.65fr 1fr;
+  gap:10px;background:transparent;
+  margin:10px 20px 0;
+}
+.feat-main{
+  background:var(--surface);padding:40px 36px;cursor:pointer;
+  transition:box-shadow .22s;position:relative;overflow:hidden;
+  box-shadow:var(--sh);
+  border-left:4px solid var(--navy);
+}
+.feat-main:hover{box-shadow:var(--sh2);}
+.feat-main .card-cat{color:var(--navy-l);letter-spacing:.18em;margin-left:0;}
+.feat-main .card-title{
+  font-family:'Noto Serif KR',serif;font-size:32px;font-weight:700;
+  line-height:1.25;color:var(--ink);
+  margin-bottom:18px;text-transform:none;margin-left:0;
+}
+.feat-main .card-title em{font-style:normal;font-weight:700;color:var(--navy-l);}
+.feat-main .card-body{
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:300;
+  line-height:1.95;color:var(--txt2);margin-left:0;
+}
+.feat-side{display:flex;flex-direction:column;gap:10px;}
+.feat-side-item{
+  flex:1;background:var(--surface);padding:26px 22px;
+  cursor:pointer;
+  transition:box-shadow .22s,transform .2s,border-top-color .2s;
+  position:relative;
+  box-shadow:var(--sh);
+  border-top:3px solid transparent;
+}
+.feat-side-item:hover{box-shadow:var(--sh2);transform:translateY(-2px);border-top-color:var(--navy);}
+.feat-side-item:hover .card-arrow{color:var(--navy);transform:translate(4px,-4px);}
+.feat-side-item .card-num{font-size:11px;}
+.feat-side-item .card-title{font-size:14px;}
+
+/* ── QUOTE BAND ── */
+.quote-band{
+  background:var(--navy);padding:48px 44px;
+  margin:20px 20px 0;
+  display:flex;align-items:center;
+  position:relative;overflow:hidden;
+  box-shadow:var(--sh);
+}
+.quote-band::after{
+  content:'"';
+  position:absolute;right:-16px;bottom:-50px;
+  font-family:'Georgia',serif;font-size:360px;line-height:1;
+  color:rgba(255,255,255,.04);font-style:italic;pointer-events:none;
+}
+.quote-mark{
+  font-family:'Georgia',serif;font-size:100px;line-height:.6;
+  color:rgba(255,255,255,.18);flex-shrink:0;
+  margin-right:28px;margin-top:-10px;
+}
+.quote-body{flex:1;}
+.quote-text{
+  font-family:'Noto Serif KR',serif;font-size:20px;font-weight:600;
+  line-height:1.8;color:#fff;margin-bottom:16px;
+}
+.quote-attr{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:600;
+  letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45);
+}
+
+/* ── BRIEF ROW ── */
+.brief-wrap{margin:0 20px 0;}
+.brief-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:10px;background:transparent;
+}
+.brief-card{
+  background:var(--surface);padding:22px 18px;cursor:pointer;
+  border-top:3px solid transparent;
+  transition:box-shadow .2s,border-top-color .2s,transform .2s;
+  box-shadow:var(--sh);
+  position:relative;
+}
+.brief-card:hover{box-shadow:var(--sh2);border-top-color:var(--navy);transform:translateY(-2px);}
+.brief-n{
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  color:var(--navy-pale);line-height:1;margin-bottom:10px;letter-spacing:.06em;
+}
+.brief-title{
+  font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:700;
+  line-height:1.4;color:var(--ink);margin-bottom:8px;
+}
+.brief-body{
+  font-family:'Noto Sans KR',sans-serif;font-size:11px;font-weight:300;
+  line-height:1.9;color:var(--txt2);
+}
+
+/* ── ADMIN OVERLAY ON CARDS ── */
+.admin-card-actions{
+  display:none;position:absolute;top:8px;right:8px;
+  gap:4px;z-index:10;
+}
+body.admin-mode .admin-card-actions{display:flex;}
+.admin-card-btn{
+  width:26px;height:26px;border:none;cursor:pointer;
+  font-size:11px;display:flex;align-items:center;justify-content:center;
+  transition:all .18s;opacity:.85;
+}
+.admin-card-btn:hover{opacity:1;transform:scale(1.1);}
+.admin-card-btn.edit{background:var(--navy);color:#fff;}
+.admin-card-btn.edit:hover{background:var(--navy-l);}
+.admin-card-btn.del{background:var(--red);color:#fff;}
+.admin-card-btn.del:hover{background:var(--red-d);}
+
+/* ── FOOTER ── */
+.foot{
+  background:var(--navy);padding:44px 40px 32px;
+  display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:48px;
+  margin-top:28px;
+}
+.foot-logo{
+  font-family:'Inter',sans-serif;font-size:20px;font-weight:800;
+  letter-spacing:-.02em;color:#fff;margin-bottom:6px;cursor:pointer;
+}
+.foot-tag{
+  font-family:'Inter',sans-serif;font-size:8px;
+  letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:18px;
+}
+.foot-copy{
+  font-family:'Noto Sans KR',sans-serif;font-size:11px;
+  font-weight:300;color:rgba(255,255,255,.45);line-height:1.9;
+}
+.foot-col-title{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.38);
+  margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:10px;
+}
+.foot-link{
+  font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:300;
+  color:rgba(255,255,255,.58);display:block;margin-bottom:10px;
+  cursor:pointer;transition:color .2s;text-decoration:none;
+}
+.foot-link:hover{color:#fff;}
+
+/* ── ALL ARTICLES MODAL ── */
+.all-modal-bg{
+  display:none;position:fixed;inset:0;background:rgba(11,25,50,.7);
+  z-index:998;align-items:flex-start;justify-content:center;
+  backdrop-filter:blur(8px);overflow-y:auto;padding:40px 20px;
+}
+.all-modal-bg.open{display:flex;}
+.all-modal-box{
+  background:var(--surface);width:100%;max-width:820px;
+  position:relative;animation:fadeUp .3s ease;
+  box-shadow:0 20px 60px rgba(11,25,50,.2);
+}
+.all-modal-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 32px;
+  background:var(--navy);
+}
+.all-modal-title{
+  font-family:'Noto Serif KR',serif;font-size:22px;font-weight:700;
+  color:#fff;
+}
+.all-modal-close{
+  font-size:16px;color:rgba(255,255,255,.5);background:none;border:none;
+  cursor:pointer;transition:color .2s;
+}
+.all-modal-close:hover{color:#fff;}
+.all-art-list{display:flex;flex-direction:column;gap:0;}
+.all-art-item{
+  display:flex;align-items:center;gap:20px;
+  padding:18px 32px;border-bottom:1px solid var(--border);
+  cursor:pointer;transition:background .2s;
+  position:relative;
+}
+.all-art-item:hover{background:var(--navy-pale);}
+.all-art-num{
+  font-family:'Inter',sans-serif;font-size:13px;font-weight:700;
+  color:var(--border);flex-shrink:0;width:32px;
+}
+.all-art-info{flex:1;}
+.all-art-pill{
+  display:inline-block;background:var(--navy);padding:3px 10px;
+  font-family:'Inter',sans-serif;font-size:8px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:#fff;margin-bottom:6px;
+}
+.all-art-title{
+  font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:700;
+  color:var(--ink);margin-bottom:4px;
+}
+.all-art-time{
+  font-family:'Inter',sans-serif;font-size:10px;
+  color:var(--txt3);letter-spacing:.06em;
+}
+.all-art-arrow{font-size:16px;color:var(--border);transition:color .2s;flex-shrink:0;}
+.all-art-item:hover .all-art-arrow{color:var(--navy);}
+
+/* ── SUBSCRIBE MODAL ── */
+.modal-bg{
+  display:none;position:fixed;inset:0;background:rgba(11,25,50,.7);
+  z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(8px);
+}
+.modal-bg.open{display:flex;}
+.modal-box{
+  background:var(--surface);
+  padding:44px 40px;max-width:420px;width:90%;
+  position:relative;animation:fadeUp .35s ease;
+  box-shadow:0 20px 60px rgba(11,25,50,.2);
+  border-top:4px solid var(--navy);
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.modal-close{
+  position:absolute;top:16px;right:18px;font-size:16px;color:var(--txt3);
+  cursor:pointer;transition:color .2s;background:none;border:none;
+}
+.modal-close:hover{color:var(--ink);}
+.modal-eyebrow{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--navy-l);margin-bottom:12px;
+}
+.modal-title{
+  font-family:'Noto Serif KR',serif;font-size:32px;font-weight:700;
+  line-height:1.25;color:var(--ink);margin-bottom:12px;
+}
+.modal-sub{
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:300;
+  line-height:1.9;color:var(--txt2);margin-bottom:22px;
+}
+.modal-input{
+  width:100%;background:var(--surface-2);border:1px solid var(--border);padding:12px 16px;
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:300;color:var(--ink);
+  margin-bottom:10px;outline:none;transition:border-color .2s;
+}
+.modal-input:focus{border-color:var(--navy);}
+.modal-input::placeholder{color:var(--txt3);}
+.modal-btn{
+  width:100%;background:var(--red);border:none;padding:13px;
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:#fff;
+  cursor:pointer;transition:background .2s;
+}
+.modal-btn:hover{background:var(--red-d);}
+.modal-fine{
+  font-family:'Noto Sans KR',sans-serif;font-size:10px;font-weight:300;
+  color:var(--txt3);margin-top:10px;line-height:1.75;
+}
+.modal-consent{margin:12px 0 14px;border:1px solid var(--border);padding:12px 14px;background:var(--surface-2);}
+.modal-consent-item{
+  display:flex;align-items:flex-start;gap:8px;cursor:pointer;
+  font-family:'Noto Sans KR',sans-serif;font-size:11px;font-weight:500;color:var(--ink);
+}
+.modal-consent-item input[type=checkbox]{margin-top:2px;accent-color:var(--navy);flex-shrink:0;}
+.modal-consent-detail{
+  font-family:'Noto Sans KR',sans-serif;font-size:10px;font-weight:300;
+  color:var(--txt3);margin:4px 0 0 20px;line-height:1.7;
+}
+.modal-consent-err{
+  font-family:'Noto Sans KR',sans-serif;font-size:10px;font-weight:500;
+  color:var(--red);margin-top:6px;display:none;
+}
+.modal-consent-err.show{display:block;}
+.mast-site-link{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--navy-l);
+  text-decoration:none;border:1px solid var(--navy-l);padding:6px 14px;
+  transition:background .2s,color .2s;
+}
+.mast-site-link:hover{background:var(--navy-l);color:#fff;}
+
+/* ── SEARCH BAND ── */
+.search-band{
+  background:var(--surface);margin:20px 20px 0;
+  display:grid;grid-template-columns:1fr 1.4fr;
+  gap:0;box-shadow:var(--sh);overflow:hidden;
+}
+.sb-left{
+  background:var(--navy);padding:44px 40px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.sb-eyebrow{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.4);
+  margin-bottom:14px;
+}
+.sb-title{
+  font-family:'Noto Serif KR',serif;font-size:34px;font-weight:700;
+  color:#fff;line-height:1.2;margin-bottom:12px;
+}
+.sb-count{
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:300;
+  color:rgba(255,255,255,.55);line-height:1.8;
+}
+.sb-right{
+  padding:44px 40px;display:flex;flex-direction:column;justify-content:center;gap:16px;
+}
+.sb-input-wrap{display:flex;gap:0;}
+.sb-input{
+  flex:1;padding:14px 18px;
+  background:var(--surface-2);border:1px solid var(--border);border-right:none;
+  font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:300;
+  color:var(--ink);outline:none;transition:border-color .2s;
+}
+.sb-input:focus{border-color:var(--navy);}
+.sb-input::placeholder{color:var(--txt3);}
+.sb-btn{
+  padding:14px 28px;background:var(--red);border:none;
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:#fff;
+  cursor:pointer;transition:background .2s;white-space:nowrap;
+}
+.sb-btn:hover{background:var(--red-d);}
+.sb-all-link{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--navy);
+  text-decoration:none;border:1px solid var(--navy);
+  padding:12px 22px;align-self:flex-start;
+  transition:background .2s,color .2s;
+}
+.sb-all-link:hover{background:var(--navy);color:#fff;}
+.sb-all-link span{font-size:14px;}
+.sb-hint{
+  font-family:'Noto Sans KR',sans-serif;font-size:11px;font-weight:300;
+  color:var(--txt3);
+}
+
+/* ── FEAT 3-COL ── */
+.feat3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 20px 0;}
+.feat-item{
+  background:var(--surface);padding:32px 28px;cursor:pointer;
+  transition:box-shadow .22s,transform .2s;position:relative;overflow:hidden;
+  box-shadow:var(--sh);border-top:4px solid var(--navy);
+}
+.feat-item:hover{box-shadow:var(--sh2);transform:translateY(-2px);}
+.feat-item .card-cat{color:var(--navy-l);letter-spacing:.18em;margin-left:0;}
+.feat-item .card-title{
+  font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;
+  line-height:1.3;color:var(--ink);margin-bottom:12px;text-transform:none;margin-left:0;
+}
+.feat-item .card-body{
+  font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:300;
+  line-height:1.9;color:var(--txt2);margin-left:0;
+}
+
+/* ── CASES BAND ── */
+.cases-band{
+  background:var(--navy);padding:36px 44px 40px;
+  margin:20px 20px 0;position:relative;overflow:hidden;box-shadow:var(--sh);
+}
+.cases-band::after{
+  content:'"법"';position:absolute;right:-20px;bottom:-60px;
+  font-family:'Georgia',serif;font-size:300px;line-height:1;
+  color:rgba(255,255,255,.03);pointer-events:none;
+}
+.cases-band-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+.cases-band-label{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.5);
+}
+.cases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.case-card{
+  background:rgba(255,255,255,.07);padding:22px 20px;
+  border-top:2px solid rgba(255,255,255,.2);
+  transition:background .2s;position:relative;
+}
+body.admin-mode .case-card{cursor:pointer;}
+body.admin-mode .case-card:hover{background:rgba(255,255,255,.13);}
+.case-card-label{
+  font-family:'Inter',sans-serif;font-size:8px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.38);margin-bottom:10px;
+}
+.case-card-title{
+  font-family:'Noto Serif KR',serif;font-size:15px;font-weight:700;
+  line-height:1.45;color:#fff;margin-bottom:10px;
+}
+.case-card-body{
+  font-family:'Noto Sans KR',sans-serif;font-size:11px;font-weight:300;
+  line-height:1.85;color:rgba(255,255,255,.62);
+}
+.case-card-date{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:600;
+  color:rgba(255,255,255,.3);margin-top:12px;letter-spacing:.06em;
+}
+.cases-admin-edit-btn{
+  display:none;background:rgba(255,255,255,.12);border:none;
+  color:rgba(255,255,255,.75);font-family:'Inter',sans-serif;
+  font-size:9px;font-weight:700;letter-spacing:.1em;
+  padding:6px 14px;cursor:pointer;transition:background .2s;
+}
+body.admin-mode .cases-admin-edit-btn{display:block;}
+.cases-admin-edit-btn:hover{background:rgba(255,255,255,.22);}
+
+/* ── TEAM SECTION ── */
+.team-wrap{margin:0 20px;}
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.team-card{
+  background:var(--surface);padding:28px 20px 22px;
+  border-top:3px solid transparent;
+  transition:box-shadow .2s,border-top-color .2s,transform .2s;
+  box-shadow:var(--sh);position:relative;text-align:center;
+  cursor:pointer;text-decoration:none;display:block;
+}
+.team-card:hover{box-shadow:var(--sh2);border-top-color:var(--navy);transform:translateY(-2px);}
+.team-photo-wrap{
+  width:72px;height:72px;border-radius:50%;
+  margin:0 auto 14px;overflow:hidden;
+  background:var(--navy-pale);border:3px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+}
+.team-photo-wrap img{width:100%;height:100%;object-fit:cover;}
+.team-photo-init{
+  font-family:'Inter',sans-serif;font-size:22px;font-weight:700;color:var(--navy-l);
+}
+.team-name{font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+.team-role{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--navy-l);margin-bottom:10px;
+}
+.team-desc{font-family:'Noto Sans KR',sans-serif;font-size:11px;font-weight:300;line-height:1.8;color:var(--txt2);}
+.team-link-arrow{
+  display:inline-block;margin-top:10px;
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  color:var(--navy-l);letter-spacing:.08em;
+}
+body.admin-mode .team-card{cursor:default;}
+body.admin-mode .team-card .team-admin-actions{display:flex;}
+.team-admin-actions{
+  display:none;position:absolute;top:8px;right:8px;
+  gap:4px;z-index:10;
+}
+
+/* ── SECTION TITLE EDITABLE (ADMIN) ── */
+.sec-hd-label[contenteditable=true]{
+  outline:2px dashed var(--navy-l);padding:2px 6px;cursor:text;
+}
+.sec-hd-save-hint{
+  display:none;font-family:'Inter',sans-serif;font-size:8px;font-weight:600;
+  color:var(--navy-l);letter-spacing:.1em;margin-left:8px;
+}
+body.admin-mode .sec-hd-save-hint{display:inline;}
+
+/* ── TEAM MANAGEMENT MODAL ── */
+.team-modal-bg{
+  display:none;position:fixed;inset:0;background:rgba(11,25,50,.7);
+  z-index:998;align-items:flex-start;justify-content:center;
+  backdrop-filter:blur(8px);overflow-y:auto;padding:40px 20px;
+}
+.team-modal-bg.open{display:flex;}
+.team-modal-box{
+  background:var(--surface);width:100%;max-width:680px;
+  position:relative;animation:fadeUp .3s ease;
+  box-shadow:0 20px 60px rgba(11,25,50,.2);
+}
+.team-modal-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 28px;background:var(--navy);
+}
+.team-modal-title{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:#fff;}
+.team-modal-close{font-size:16px;color:rgba(255,255,255,.5);background:none;border:none;cursor:pointer;transition:color .2s;}
+.team-modal-close:hover{color:#fff;}
+.team-modal-body{padding:24px 28px;}
+.team-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+.team-list-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surface-2);border:1px solid var(--border);}
+.team-list-avatar{
+  width:42px;height:42px;border-radius:50%;flex-shrink:0;overflow:hidden;
+  background:var(--navy-pale);border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:var(--navy-l);
+}
+.team-list-avatar img{width:100%;height:100%;object-fit:cover;}
+.team-list-info{flex:1;}
+.team-list-name{font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;color:var(--ink);}
+.team-list-role{font-family:'Inter',sans-serif;font-size:10px;color:var(--txt3);letter-spacing:.06em;}
+.team-list-btns{display:flex;gap:5px;}
+.tlb{padding:5px 12px;border:none;font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:.08em;cursor:pointer;}
+.tlb.edit{background:var(--navy);color:#fff;}
+.tlb.edit:hover{background:var(--navy-l);}
+.tlb.del{background:var(--red);color:#fff;}
+.tlb.del:hover{background:var(--red-d);}
+.tlb.up,.tlb.dn{background:var(--border);color:var(--ink);}
+.tlb.up:hover,.tlb.dn:hover{background:var(--navy-pale);}
+.team-add-row{margin-top:6px;}
+.team-add-btn{
+  width:100%;padding:12px;background:var(--navy);border:none;
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:#fff;cursor:pointer;transition:background .2s;
+}
+.team-add-btn:hover{background:var(--navy-l);}
+.tmf{display:none;padding:20px;background:var(--navy-pale);border:1px solid var(--border);margin-top:14px;}
+.tmf.open{display:block;}
+.tmf-row{margin-bottom:12px;}
+.tmf-label{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--txt3);display:block;margin-bottom:5px;}
+.tmf-input{width:100%;background:var(--surface);border:1px solid var(--border);padding:9px 12px;font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:300;color:var(--ink);outline:none;transition:border-color .2s;box-sizing:border-box;}
+.tmf-input:focus{border-color:var(--navy);}
+.tmf-textarea{width:100%;background:var(--surface);border:1px solid var(--border);padding:9px 12px;font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:300;color:var(--ink);outline:none;transition:border-color .2s;resize:vertical;min-height:68px;box-sizing:border-box;}
+.tmf-textarea:focus{border-color:var(--navy);}
+.tmf-photo-preview{width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid var(--border);display:none;margin-bottom:8px;}
+.tmf-photo-preview.show{display:block;}
+.tmf-btns{display:flex;gap:8px;margin-top:14px;}
+.tmf-save{padding:10px 22px;background:var(--navy);border:none;font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#fff;cursor:pointer;}
+.tmf-save:hover{background:var(--navy-l);}
+.tmf-cancel{padding:10px 18px;background:var(--border);border:none;font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);cursor:pointer;}
+
+/* ── CASE EDIT MODAL ── */
+.case-modal-bg{
+  display:none;position:fixed;inset:0;background:rgba(11,25,50,.75);
+  z-index:1001;align-items:center;justify-content:center;backdrop-filter:blur(8px);
+}
+.case-modal-bg.open{display:flex;}
+.case-modal-box{
+  background:var(--surface);width:90%;max-width:460px;
+  position:relative;animation:fadeUp .3s ease;
+  box-shadow:0 20px 60px rgba(11,25,50,.25);padding:36px 32px;
+}
+.case-modal-hd{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:var(--ink);margin-bottom:20px;}
+.case-modal-close{position:absolute;top:14px;right:16px;font-size:16px;color:var(--txt3);cursor:pointer;background:none;border:none;}
+.cmf-row{margin-bottom:12px;}
+.cmf-label{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--txt3);display:block;margin-bottom:5px;}
+.cmf-input{width:100%;background:var(--surface-2);border:1px solid var(--border);padding:9px 12px;font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:300;color:var(--ink);outline:none;transition:border-color .2s;box-sizing:border-box;}
+.cmf-input:focus{border-color:var(--navy);}
+.cmf-textarea{width:100%;background:var(--surface-2);border:1px solid var(--border);padding:9px 12px;font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:300;color:var(--ink);outline:none;resize:vertical;min-height:80px;box-sizing:border-box;}
+.cmf-textarea:focus{border-color:var(--navy);}
+.cmf-btns{display:flex;gap:8px;margin-top:18px;}
+.cmf-save{padding:11px 24px;background:var(--navy);border:none;font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;cursor:pointer;}
+.cmf-save:hover{background:var(--navy-l);}
+.cmf-cancel{padding:11px 18px;background:var(--border);border:none;font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);cursor:pointer;}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:32px;right:32px;
+  background:var(--navy);color:#fff;
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:12px 20px;opacity:0;transform:translateY(10px);
+  transition:opacity .3s,transform .3s;z-index:1001;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateY(0);}
+
+/* ── PROGRESS BAR ── */
+.progress{
+  position:fixed;top:0;left:0;height:3px;
+  background:var(--navy);z-index:1000;width:0%;transition:width .1s;
+}
+body.admin-mode .progress{top:var(--admin-bar-h);}
+
+/* ── ADMIN LINK ── */
+.admin-link{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:500;
+  color:rgba(255,255,255,.2);cursor:pointer;
+  margin-left:10px;letter-spacing:.08em;
+  transition:color .2s;border-bottom:1px solid transparent;
+  user-select:none;
+}
+.admin-link:hover{color:rgba(255,255,255,.5);border-bottom-color:rgba(255,255,255,.3);}
+
+/* ── ADMIN LOGIN MODAL ── */
+.admin-modal-bg{
+  display:none;position:fixed;inset:0;background:rgba(6,13,24,.85);
+  z-index:1100;align-items:center;justify-content:center;backdrop-filter:blur(12px);
+}
+.admin-modal-bg.open{display:flex;}
+.admin-modal-box{
+  background:var(--surface);width:360px;
+  position:relative;animation:fadeUp .3s ease;
+  box-shadow:0 24px 80px rgba(6,13,24,.4);
+  border-top:3px solid var(--navy);
+}
+.admin-modal-hd{
+  background:var(--navy);padding:20px 28px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.admin-modal-title{
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.7);
+}
+.admin-modal-close{
+  font-size:14px;color:rgba(255,255,255,.4);background:none;border:none;
+  cursor:pointer;transition:color .2s;
+}
+.admin-modal-close:hover{color:#fff;}
+.admin-modal-body{padding:28px;}
+.admin-modal-label{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--txt3);
+  margin-bottom:6px;display:block;
+}
+.admin-modal-input{
+  width:100%;background:var(--surface-2);border:1px solid var(--border);
+  padding:11px 14px;margin-bottom:14px;
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;color:var(--ink);
+  outline:none;transition:border-color .2s;
+}
+.admin-modal-input:focus{border-color:var(--navy);}
+.admin-modal-input.err{border-color:var(--red);}
+.admin-modal-btn{
+  width:100%;background:var(--navy);border:none;padding:13px;
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:#fff;
+  cursor:pointer;transition:background .2s;margin-top:4px;
+}
+.admin-modal-btn:hover{background:var(--navy-l);}
+.admin-modal-err{
+  font-family:'Noto Sans KR',sans-serif;font-size:11px;color:var(--red);
+  margin-top:10px;display:none;text-align:center;
+}
+.admin-modal-err.show{display:block;}
+
+/* ── CATEGORY MODAL ── */
+.cat-modal-bg{
+  display:none;position:fixed;inset:0;background:rgba(6,13,24,.8);
+  z-index:1100;align-items:center;justify-content:center;backdrop-filter:blur(10px);
+}
+.cat-modal-bg.open{display:flex;}
+.cat-modal-box{
+  background:var(--surface);width:420px;
+  position:relative;animation:fadeUp .3s ease;
+  box-shadow:0 24px 80px rgba(6,13,24,.35);
+  border-top:3px solid var(--navy);
+}
+.cat-modal-hd{
+  background:var(--navy);padding:18px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.cat-modal-title{
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.7);
+}
+.cat-modal-close{
+  font-size:14px;color:rgba(255,255,255,.4);background:none;border:none;
+  cursor:pointer;transition:color .2s;
+}
+.cat-modal-close:hover{color:#fff;}
+.cat-modal-body{padding:22px 24px;}
+.cat-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;max-height:280px;overflow-y:auto;}
+.cat-item{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 12px;background:var(--surface-2);border:1px solid var(--border);
+}
+.cat-item-name{
+  flex:1;font-family:'Noto Sans KR',sans-serif;font-size:13px;color:var(--ink);
+}
+.cat-item-input{
+  flex:1;background:transparent;border:none;outline:none;
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;color:var(--ink);
+  padding:0;
+}
+.cat-item-edit{
+  background:none;border:none;color:var(--txt3);cursor:pointer;font-size:12px;
+  padding:3px 6px;transition:color .15s;
+}
+.cat-item-edit:hover{color:var(--navy);}
+.cat-item-del{
+  background:none;border:none;color:var(--txt3);cursor:pointer;font-size:12px;
+  padding:3px 6px;transition:color .15s;
+}
+.cat-item-del:hover{color:var(--red);}
+.cat-add-row{display:flex;gap:8px;}
+.cat-add-input{
+  flex:1;background:var(--surface-2);border:1px solid var(--border);
+  padding:9px 12px;font-family:'Noto Sans KR',sans-serif;font-size:13px;
+  color:var(--ink);outline:none;transition:border-color .2s;
+}
+.cat-add-input:focus{border-color:var(--navy);}
+.cat-add-input::placeholder{color:var(--txt3);}
+.cat-add-btn{
+  background:var(--navy);border:none;color:#fff;
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.12em;padding:9px 16px;cursor:pointer;
+  transition:background .2s;
+}
+.cat-add-btn:hover{background:var(--navy-l);}
+
+/* ── ARTICLE READER OVERLAY ── */
+.reader-overlay{
+  display:none;position:fixed;inset:0;background:var(--bg);
+  z-index:600;overflow-y:auto;
+}
+.reader-overlay.open{display:block;}
+.reader-bar{
+  position:sticky;top:0;background:var(--navy);
+  padding:12px 24px;display:flex;align-items:center;gap:16px;
+  z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+.reader-bar-label{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);
+}
+.reader-close-btn{
+  margin-left:auto;background:rgba(255,255,255,.12);border:none;
+  color:#fff;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;padding:7px 16px;
+  cursor:pointer;transition:background .2s;
+}
+.reader-close-btn:hover{background:rgba(255,255,255,.22);}
+.reader-content{max-width:760px;margin:48px auto;padding:0 24px 80px;}
+.reader-cover{width:100%;max-height:380px;object-fit:cover;margin-bottom:32px;display:none;}
+.reader-cover.show{display:block;}
+.reader-pill{
+  display:inline-block;background:var(--navy);padding:4px 12px;
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:#fff;margin-bottom:14px;
+}
+.reader-hed{
+  font-family:'Noto Serif KR',serif;font-size:36px;font-weight:700;
+  line-height:1.25;color:var(--ink);margin-bottom:14px;
+}
+.reader-dek{
+  font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:300;
+  line-height:1.9;color:var(--txt2);margin-bottom:20px;
+}
+.reader-meta{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Inter',sans-serif;font-size:11px;color:var(--txt3);
+  margin-bottom:36px;padding-bottom:24px;border-bottom:2px solid var(--navy);
+}
+.reader-meta-sep{width:1px;height:12px;background:var(--border);}
+.reader-body{
+  font-family:'Noto Sans KR',sans-serif;font-size:15px;line-height:1.95;color:var(--ink);
+}
+.reader-body h1{font-family:'Noto Serif KR',serif;font-size:32px;font-weight:700;line-height:1.3;margin:28px 0 14px;}
+.reader-body h2{font-family:'Noto Serif KR',serif;font-size:24px;font-weight:700;margin:24px 0 12px;}
+.reader-body h3{font-size:18px;font-weight:700;margin:20px 0 10px;}
+.reader-body h4{font-size:15px;font-weight:700;margin:16px 0 8px;}
+.reader-body p{margin:0 0 12px;}
+.reader-body blockquote{border-left:4px solid var(--navy);padding:14px 20px;margin:20px 0;background:var(--navy-pale);font-style:italic;color:var(--txt2);font-size:14px;line-height:1.9;}
+.reader-body pre{background:var(--ink);color:#e8f0fe;padding:18px 22px;margin:16px 0;font-family:'Courier New',monospace;font-size:13px;overflow-x:auto;}
+.reader-body code{background:var(--navy-pale);color:var(--navy-l);padding:2px 6px;font-family:'Courier New',monospace;font-size:13px;}
+.reader-body pre code{background:none;color:inherit;padding:0;}
+.reader-body ul,.reader-body ol{padding-left:28px;margin:8px 0 12px;}
+.reader-body li{margin-bottom:6px;line-height:1.85;}
+.reader-body a{color:var(--navy-l);text-decoration:underline;}
+.reader-body a:hover{color:var(--red);}
+.reader-body hr{border:none;border-top:2px solid var(--border);margin:28px 0;}
+.reader-body img{max-width:100%;height:auto;display:block;margin:16px auto;box-shadow:var(--sh);}
+.reader-body table{border-collapse:collapse;width:100%;margin:16px 0;}
+.reader-body th,.reader-body td{border:1px solid var(--border);padding:10px 14px;font-size:13px;text-align:left;}
+.reader-body th{background:var(--navy);color:#fff;font-weight:700;}
+.reader-body tr:nth-child(even) td{background:var(--surface-2);}
+
+/* ════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════ */
+@media(max-width:960px){
+  .search-band{grid-template-columns:1fr;margin:14px 14px 0;}
+  .sb-left{padding:28px 24px;}
+  .sb-title{font-size:26px;}
+  .sb-right{padding:28px 24px;}
+
+  .mast{padding:20px 24px;}
+  .hero{grid-template-columns:1fr;margin:14px;}
+  .hero-r-list{border-left:none;border-top:1px solid var(--border);}
+  .grid3{grid-template-columns:1fr 1fr;margin:0 14px;}
+  .sec-hd{padding:28px 14px 10px;}
+  .feat3{grid-template-columns:1fr 1fr;margin:8px 14px 0;}
+  .cases-band{padding:28px 24px 32px;margin:14px 14px 0;}
+  .cases-grid{grid-template-columns:1fr 1fr;gap:12px;}
+  .team-wrap,.brief-wrap{margin:0 14px;}
+  .team-grid{grid-template-columns:1fr 1fr;}
+  .foot{padding:32px 24px 24px;gap:32px;}
+}
+@media(max-width:640px){
+  .search-band{margin:10px 10px 0;}
+  .sb-left{padding:22px 18px;}
+  .sb-title{font-size:22px;}
+  .sb-right{padding:22px 18px;gap:12px;}
+  .sb-input{font-size:13px;padding:11px 14px;}
+  .sb-btn{padding:11px 18px;font-size:10px;}
+  .mast{padding:16px 16px 0;}
+  .mast-top{flex-direction:column;gap:14px;align-items:flex-start;}
+  .mast-right{gap:8px;flex-wrap:wrap;}
+  .mast-site-link,.mast-all-btn{font-size:8px;padding:6px 10px;}
+  .mast-sub-btn{font-size:9px;padding:8px 14px;}
+  .mast-nav{margin:0 -16px;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;}
+  .mast-nav-item{flex:none;min-width:72px;font-size:9px;padding:10px 8px;}
+  .hero{margin:10px;grid-template-columns:1fr;}
+  .hero-r-list{display:none;}
+  .hero-card{padding:20px 18px;min-height:160px;}
+  .hero-card-hed{font-size:18px;}
+  .grid3{grid-template-columns:1fr;margin:0 10px;}
+  .sec-hd{padding:24px 10px 8px;}
+  .feat3{grid-template-columns:1fr;margin:6px 10px 0;}
+  .cases-band{margin:10px 10px 0;padding:22px 18px 26px;}
+  .cases-grid{grid-template-columns:1fr;gap:10px;}
+  .team-wrap,.brief-wrap{margin:0 10px;}
+  .team-grid{grid-template-columns:1fr 1fr;gap:8px;}
+  .team-card{padding:20px 14px 16px;}
+  .foot{grid-template-columns:1fr;padding:28px 18px 20px;gap:24px;}
+  .foot-logo{font-size:16px;}
+  .all-modal-box{margin:0;}
+  .modal-box{padding:28px 20px;}
+  .modal-title{font-size:24px;}
+  .team-modal-box,.case-modal-box{margin:0;}
+  .reader-content{padding:0 16px 60px;}
+  .reader-hed{font-size:24px;}
+}
+@media(max-width:400px){
+  .team-grid{grid-template-columns:1fr;}
+  .mast-right{gap:6px;}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<!-- ADMIN FLOATING BAR -->
+<div class="admin-bar" id="admin-bar">
+  <div class="admin-bar-label">Admin Mode</div>
+  <button class="admin-bar-btn write" onclick="window.location.href='admin_write.html'">✏ 새 글 쓰기</button>
+  <button class="admin-bar-btn cat" onclick="openCatModal()">카테고리 관리</button>
+  <button class="admin-bar-btn cat" onclick="openTeamModal()">구성원 관리</button>
+  <button class="admin-bar-btn cat" onclick="openCasesModal()">사건·사례 편집</button>
+  <button class="admin-bar-btn logout" onclick="adminLogout()">로그아웃</button>
+</div>
+
+<!-- ALL ARTICLES MODAL -->
+<div class="all-modal-bg" id="all-modal">
+  <div class="all-modal-box">
+    <div class="all-modal-hd">
+      <div class="all-modal-title">전체 뉴스레터</div>
+      <button class="all-modal-close" onclick="closeAllModal()">✕</button>
+    </div>
+    <div class="all-art-list" id="all-art-list"></div>
+  </div>
+</div>
+
+<!-- SUBSCRIBE MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-eyebrow">(광고) 법무법인 노바 뉴스레터</div>
+    <div class="modal-title">매주 화요일,<br>법률 뉴스를<br>쉽게 읽으세요</div>
+    <div class="modal-sub">복잡한 법률 이슈를 알기 쉽게 풀어 드립니다. 생활 법률부터 기업 법무까지, 법무법인 노바가 엄선한 법률 정보를 매주 화요일 오전 9시에 보내드립니다.</div>
+    <input class="modal-input" type="email" placeholder="이메일 주소 입력" id="email-input">
+    <div class="modal-consent">
+      <label class="modal-consent-item">
+        <input type="checkbox" id="consent-privacy">
+        <span>[필수] 개인정보 수집·이용 동의</span>
+      </label>
+      <div class="modal-consent-detail">수집 항목: 이메일 주소 · 수집 목적: 뉴스레터 발송 · 보유 기간: 구독 해지 시까지</div>
+      <label class="modal-consent-item" style="margin-top:10px;">
+        <input type="checkbox" id="consent-ads">
+        <span>[필수] 광고성 정보 수신 동의 (정보통신망법 제50조)</span>
+      </label>
+      <div class="modal-consent-detail">매주 화요일 법무법인 노바 법률 뉴스레터(광고 포함)를 이메일로 수신하는 것에 동의합니다. 수신 거부는 이메일 하단 링크를 통해 언제든지 가능합니다.</div>
+    </div>
+    <div class="modal-consent-err" id="consent-err">동의 항목을 모두 체크해 주세요.</div>
+    <button class="modal-btn" onclick="handleSubscribe()">무료 구독 신청 →</button>
+    <div class="modal-fine">구독은 언제든지 취소할 수 있습니다. 법령에 따라 광고성 이메일에는 "(광고)" 표시가 포함됩니다.</div>
+  </div>
+</div>
+
+<!-- TEAM MANAGEMENT MODAL -->
+<div class="team-modal-bg" id="team-modal">
+  <div class="team-modal-box">
+    <div class="team-modal-hd">
+      <div class="team-modal-title">구성원 관리</div>
+      <button class="team-modal-close" onclick="closeTeamModal()">✕</button>
+    </div>
+    <div class="team-modal-body">
+      <div class="team-list" id="team-list"></div>
+      <div class="team-add-row">
+        <button class="team-add-btn" onclick="openTeamForm(null)">+ 구성원 추가</button>
+      </div>
+      <div class="tmf" id="team-form">
+        <div class="tmf-row">
+          <label class="tmf-label">이름</label>
+          <input class="tmf-input" id="tmf-name" placeholder="홍길동">
+        </div>
+        <div class="tmf-row">
+          <label class="tmf-label">직함 (예: 변호사 · 대표)</label>
+          <input class="tmf-input" id="tmf-role" placeholder="변호사">
+        </div>
+        <div class="tmf-row">
+          <label class="tmf-label">소개 (전문 분야 등)</label>
+          <textarea class="tmf-textarea" id="tmf-desc" placeholder="전문 분야 및 약력을 입력하세요."></textarea>
+        </div>
+        <div class="tmf-row">
+          <label class="tmf-label">프로필 사진</label>
+          <img class="tmf-photo-preview" id="tmf-photo-preview" src="" alt="">
+          <input type="file" id="tmf-photo-file" accept="image/*" style="display:none;" onchange="handleTeamPhotoUpload(event)">
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button class="tmf-save" style="padding:7px 14px;font-size:8px;" onclick="document.getElementById('tmf-photo-file').click()">📷 사진 업로드</button>
+            <span style="font-family:'Noto Sans KR',sans-serif;font-size:10px;color:var(--txt3);">또는</span>
+            <input class="tmf-input" id="tmf-photo-url" placeholder="이미지 URL 직접 입력" style="flex:1;" oninput="previewTeamPhotoUrl(this.value)">
+          </div>
+        </div>
+        <input type="hidden" id="tmf-id">
+        <input type="hidden" id="tmf-photo-data">
+        <div class="tmf-btns">
+          <button class="tmf-save" onclick="saveTeamMember()">저장</button>
+          <button class="tmf-cancel" onclick="closeTeamForm()">취소</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CASE EDIT MODAL -->
+<div class="case-modal-bg" id="case-modal">
+  <div class="case-modal-box">
+    <div class="case-modal-hd">사건·사례 편집</div>
+    <button class="case-modal-close" onclick="closeCaseModal()">✕</button>
+    <div style="margin-bottom:14px;">
+      <label class="cmf-label" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--txt3);display:block;margin-bottom:5px;">사건 번호</label>
+      <select class="cmf-input" id="case-select" onchange="loadCaseToForm()" style="cursor:pointer;">
+        <option value="0">사건 1</option>
+        <option value="1">사건 2</option>
+        <option value="2">사건 3</option>
+      </select>
+    </div>
+    <div class="cmf-row">
+      <label class="cmf-label">제목</label>
+      <input class="cmf-input" id="cmf-title" placeholder="사건명 또는 판결 요지">
+    </div>
+    <div class="cmf-row">
+      <label class="cmf-label">내용 요약</label>
+      <textarea class="cmf-textarea" id="cmf-body" placeholder="사건 내용을 간략히 설명하세요."></textarea>
+    </div>
+    <div class="cmf-row">
+      <label class="cmf-label">날짜 (예: 2026.04)</label>
+      <input class="cmf-input" id="cmf-date" placeholder="2026.04">
+    </div>
+    <div class="cmf-row">
+      <label class="cmf-label">분류 레이블 (예: 민사 · 형사 · 노동)</label>
+      <input class="cmf-input" id="cmf-label-text" placeholder="민사">
+    </div>
+    <div class="cmf-btns">
+      <button class="cmf-save" onclick="saveCaseFromModal()">저장</button>
+      <button class="cmf-cancel" onclick="closeCaseModal()">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+<div class="admin-modal-bg" id="admin-modal">
+  <div class="admin-modal-box">
+    <div class="admin-modal-hd">
+      <div class="admin-modal-title">Administrator Login</div>
+      <button class="admin-modal-close" onclick="closeAdminLogin()">✕</button>
+    </div>
+    <div class="admin-modal-body">
+      <label class="admin-modal-label">아이디</label>
+      <input class="admin-modal-input" type="text" id="admin-id" placeholder="관리자 아이디" autocomplete="off">
+      <label class="admin-modal-label">비밀번호</label>
+      <input class="admin-modal-input" type="password" id="admin-pw" placeholder="비밀번호" onkeydown="if(event.key==='Enter')doAdminLogin()">
+      <button class="admin-modal-btn" onclick="doAdminLogin()">로그인 →</button>
+      <div class="admin-modal-err" id="admin-err">아이디 또는 비밀번호가 올바르지 않습니다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORY MANAGEMENT MODAL -->
+<div class="cat-modal-bg" id="cat-modal">
+  <div class="cat-modal-box">
+    <div class="cat-modal-hd">
+      <div class="cat-modal-title">카테고리 관리</div>
+      <button class="cat-modal-close" onclick="closeCatModal()">✕</button>
+    </div>
+    <div class="cat-modal-body">
+      <div class="cat-list" id="cat-list"></div>
+      <div class="cat-add-row">
+        <input class="cat-add-input" type="text" id="cat-add-input" placeholder="새 카테고리 이름" onkeydown="if(event.key==='Enter')addCategory()">
+        <button class="cat-add-btn" onclick="addCategory()">+ 추가</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ARTICLE READER OVERLAY -->
+<div class="reader-overlay" id="reader-overlay">
+  <div class="reader-bar">
+    <div class="reader-bar-label">뉴스레터 읽기</div>
+    <button class="reader-close-btn" onclick="closeReader()">✕ 닫기</button>
+  </div>
+  <div class="reader-content">
+    <img class="reader-cover" id="reader-cover-img" src="" alt="">
+    <div class="reader-pill" id="reader-pill"></div>
+    <div class="reader-hed" id="reader-hed"></div>
+    <div class="reader-dek" id="reader-dek"></div>
+    <div class="reader-meta">
+      <span id="reader-author"></span>
+      <span class="reader-meta-sep"></span>
+      <span id="reader-date"></span>
+    </div>
+    <div class="reader-body" id="reader-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">구독 신청 완료!</div>
+
+<!-- MASTHEAD -->
+<div class="mast">
+  <div class="mast-top">
+    <div class="mast-brand">
+      <div class="logo-wrap">
+        <img class="logo-img" src="" alt="뉴스레터 로고">
+        <span class="logo-text">법무법인 노바</span>
+      </div>
+      <div class="mast-tagline">권리를 지키고 일상을 회복하는 길에 함께하겠습니다.</div>
+    </div>
+    <div class="mast-right">
+      <a class="mast-site-link" href="https://novalaw.kr/" target="_blank" rel="noopener">홈페이지 →</a>
+      <a class="mast-all-btn" href="articles.html">전체 뉴스레터 ☰</a>
+      <div class="mast-sub-btn" onclick="openModal()">뉴스레터 구독</div>
+    </div>
+  </div>
+  <div class="mast-nav" id="mast-nav"></div>
+</div>
+
+<!-- HERO (rendered dynamically) -->
+<section class="hero" id="hero-section">
+  <div class="hero-l-wrap" id="hero-left"></div>
+  <div class="hero-r-list" id="hero-right">
+    <div class="hero-list-hd">최신 뉴스레터 목록</div>
+    <div id="hero-right-items"></div>
+  </div>
+</section>
+
+<!-- SEARCH / ALL ARTICLES BAND -->
+<div class="search-band">
+  <div class="sb-left">
+    <div class="sb-eyebrow">Nova Law Firm — Newsletter</div>
+    <div class="sb-title">전체 뉴스레터<br>열람·검색</div>
+    <div class="sb-count" id="sb-count">발행된 뉴스레터를 모두 열람하세요.</div>
+  </div>
+  <div class="sb-right">
+    <div>
+      <div class="sb-input-wrap">
+        <input class="sb-input" id="sb-input" type="text" placeholder="뉴스레터 제목, 키워드로 검색..."
+          onkeydown="if(event.key==='Enter')goSearch()">
+        <button class="sb-btn" onclick="goSearch()">검색 →</button>
+      </div>
+      <div class="sb-hint" style="margin-top:8px;">Enter 또는 검색 버튼을 누르면 전체 뉴스레터 페이지로 이동합니다.</div>
+    </div>
+    <a class="sb-all-link" href="articles.html">
+      <span>☰</span> 전체 뉴스레터 목록 보기
+    </a>
+  </div>
+</div>
+
+<!-- TOP STORIES -->
+<div class="sec-hd">
+  <div class="sec-hd-label">최신 스토리</div>
+  <div class="sec-hd-sub" onclick="openAllModal()">전체보기 →</div>
+</div>
+<div class="grid3" id="top-stories-grid"></div>
+
+<!-- FEATURED -->
+<div class="sec-hd">
+  <div class="sec-hd-label" id="sec-title-featured" data-key="featured">심층 분석 — Featured</div>
+  <div class="sec-hd-sub" onclick="openAllModal()">더보기 →</div>
+</div>
+<div class="feat3" id="feat-section"></div>
+
+<!-- CASES BAND -->
+<div class="cases-band" id="cases-band">
+  <div class="cases-band-hd">
+    <div class="cases-band-label" id="cases-band-label">법무법인 노바 — 주요 사건·사례</div>
+    <button class="cases-admin-edit-btn" onclick="openCasesModal()">✏ 사건 편집</button>
+  </div>
+  <div class="cases-grid" id="cases-grid"></div>
+</div>
+
+<!-- TEAM -->
+<div class="sec-hd" style="padding-top:36px;">
+  <div class="sec-hd-label" id="sec-title-team" data-key="team">법무법인 노바 구성원</div>
+  <a class="sec-hd-sub" href="https://novalaw.kr/team" target="_blank" rel="noopener" style="text-decoration:none;">전체 보기 →</a>
+</div>
+<div class="team-wrap">
+  <div class="team-grid" id="team-grid"></div>
+</div>
+
+<!-- FOOTER -->
+<footer class="foot">
+  <div>
+    <div class="foot-logo">법무법인 노바</div>
+    <div class="foot-tag">NOVA LAW FIRM — WITH YOU</div>
+    <div class="foot-copy">© 2026 법무법인 노바<br>
+      <span class="foot-link" style="display:inline;margin:0;cursor:pointer;" onclick="openModal()">수신거부</span> ·
+      <span class="foot-link" style="display:inline;margin:0;">개인정보처리방침</span>
+      <span class="admin-link" onclick="openAdminLogin()">Admin</span>
+    </div>
+  </div>
+  <div>
+    <div class="foot-col-title">섹션</div>
+    <span class="foot-link" id="foot-nav-links"></span>
+  </div>
+  <div>
+    <div class="foot-col-title">정보</div>
+    <span class="foot-link" onclick="openModal()">구독 관리</span>
+    <span class="foot-link" onclick="openAllModal()">전체 뉴스레터</span>
+    <span class="foot-link">광고 문의</span>
+  </div>
+</footer>
+
+<script>
+/* ════════════════════════════════════════
+   STATE & STORAGE
+════════════════════════════════════════ */
+const DEFAULT_CATS=['카테고리 1','카테고리 2','카테고리 3','카테고리 4','카테고리 5','카테고리 6'];
+
+function getArticles(){
+  try{return JSON.parse(localStorage.getItem('nova_articles')||'[]');}catch(e){return[];}
+}
+function getCategories(){
+  try{
+    const c=JSON.parse(localStorage.getItem('nova_categories')||'null');
+    return Array.isArray(c)&&c.length?c:[...DEFAULT_CATS];
+  }catch(e){return[...DEFAULT_CATS];}
+}
+function saveCategories(arr){localStorage.setItem('nova_categories',JSON.stringify(arr));saveDataToCloud('categories',arr);}
+function saveArticles(arr){localStorage.setItem('nova_articles',JSON.stringify(arr));}
+
+/* ── FIREBASE CLOUD SYNC ── */
+const FIREBASE_DB_URL='https://novalaw-a437a-default-rtdb.firebaseio.com';
+function hasFirebase(){return FIREBASE_DB_URL&&FIREBASE_DB_URL!=='YOUR_FIREBASE_DB_URL_HERE';}
+async function saveDataToCloud(path,data){
+  if(!hasFirebase())return;
+  try{await fetch(FIREBASE_DB_URL+'/'+path+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
+  catch(e){console.error('Firebase save error:',e);}
+}
+async function deleteArticleFromCloud(id){
+  if(!hasFirebase())return;
+  try{await fetch(FIREBASE_DB_URL+'/articles/'+id+'.json',{method:'DELETE'});}
+  catch(e){console.error('Firebase delete error:',e);}
+}
+async function loadFromCloud(){
+  if(!hasFirebase())return;
+  try{
+    const res=await fetch(FIREBASE_DB_URL+'/.json');
+    if(!res.ok)return;
+    const data=await res.json();
+    if(data&&data.articles){const arts=Object.values(data.articles);localStorage.setItem('nova_articles',JSON.stringify(arts));}
+    if(data&&data.team&&Array.isArray(data.team))localStorage.setItem('nova_team',JSON.stringify(data.team));
+    if(data&&data.cases&&Array.isArray(data.cases))localStorage.setItem('nova_cases',JSON.stringify(data.cases));
+    if(data&&data.sec_titles)localStorage.setItem('nova_sec_titles',JSON.stringify(data.sec_titles));
+    if(data&&data.categories&&Array.isArray(data.categories))localStorage.setItem('nova_categories',JSON.stringify(data.categories));
+  }catch(e){console.error('Firebase load error:',e);}
+}
+
+function getPublished(){
+  return getArticles()
+    .filter(a=>a.published)
+    .sort((a,b)=>new Date(b.date||b.updatedAt||0)-new Date(a.date||a.updatedAt||0));
+}
+
+function formatKoreanDate(dateStr){
+  if(!dateStr)return '';
+  const d=new Date(dateStr.includes('T')?dateStr:dateStr+'T00:00:00');
+  if(isNaN(d))return dateStr;
+  return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일`;
+}
+
+function todayKorean(){
+  const d=new Date();
+  return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일`;
+}
+
+const PLACEHOLDER={
+  title:'뉴스레터 제목 자리입니다',
+  author:'작성자 이름',
+  dek:'가나다라 마바사아 자차카타 파하나다. 라마바사 아자차카 타파하가 나다라마.',
+  section:'카테고리',
+  id:null,
+  date:null
+};
+
+function ph(art,field){
+  if(art&&art[field]!==undefined&&art[field]!=='')return art[field];
+  return PLACEHOLDER[field]||'';
+}
+
+/* ════════════════════════════════════════
+   ADMIN MODE
+════════════════════════════════════════ */
+function isAdmin(){return sessionStorage.getItem('nova_admin')==='1';}
+
+function enterAdminMode(){
+  document.body.classList.add('admin-mode');
+  document.getElementById('admin-bar').classList.add('visible');
+  renderAll();
+}
+
+function adminLogout(){
+  sessionStorage.removeItem('nova_admin');
+  document.body.classList.remove('admin-mode');
+  document.getElementById('admin-bar').classList.remove('visible');
+  renderAll();
+}
+
+/* ════════════════════════════════════════
+   ADMIN CARD ACTION BUTTONS
+════════════════════════════════════════ */
+function adminActionsHTML(art){
+  if(!art||!art.id)return '';
+  return `<div class="admin-card-actions">
+    <button class="admin-card-btn edit" onclick="event.stopPropagation();editArticle('${art.id}')" title="편집">✏</button>
+    <button class="admin-card-btn del" onclick="event.stopPropagation();deleteArticleFromHome('${art.id}')" title="삭제">✕</button>
+  </div>`;
+}
+
+function editArticle(id){
+  window.location.href='admin_write.html?id='+encodeURIComponent(id);
+}
+
+function deleteArticleFromHome(id){
+  if(!confirm('이 뉴스레터를 삭제하시겠습니까?'))return;
+  let arts=getArticles().filter(a=>a.id!==id);
+  saveArticles(arts);
+  deleteArticleFromCloud(id);
+  renderAll();
+  showToast('삭제되었습니다');
+}
+
+/* ════════════════════════════════════════
+   ARTICLE READER
+════════════════════════════════════════ */
+function openReader(art){
+  if(!art)return;
+  const overlay=document.getElementById('reader-overlay');
+  const coverImg=document.getElementById('reader-cover-img');
+  if(art.cover){coverImg.src=art.cover;coverImg.classList.add('show');}
+  else{coverImg.src='';coverImg.classList.remove('show');}
+  document.getElementById('reader-pill').textContent=art.section||'뉴스레터';
+  document.getElementById('reader-hed').textContent=art.title||'';
+  document.getElementById('reader-dek').textContent=art.dek||'';
+  document.getElementById('reader-author').textContent=art.author||'';
+  document.getElementById('reader-date').textContent=formatKoreanDate(art.date)||todayKorean();
+  document.getElementById('reader-body').innerHTML=art.body||'<p>내용이 없습니다.</p>';
+  overlay.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeReader(){
+  document.getElementById('reader-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function handleArticleClick(art){
+  if(isAdmin()){
+    // In admin mode, clicking opens reader too (edit buttons are separate)
+    openReader(art);
+  } else {
+    openReader(art);
+  }
+}
+
+/* ════════════════════════════════════════
+   NAV RENDER
+════════════════════════════════════════ */
+function renderNav(){
+  const cats=getCategories();
+  const nav=document.getElementById('mast-nav');
+  nav.innerHTML=
+    `<div class="mast-nav-item active" onclick="filterSection(this,'__all__')">전체</div>`+
+    cats.map(c=>`<div class="mast-nav-item" onclick="filterSection(this,'${c}')">${c}</div>`).join('');
+
+  // Footer nav
+  const footNav=document.getElementById('foot-nav-links');
+  if(footNav){
+    footNav.outerHTML=cats.slice(0,4).map(c=>
+      `<span class="foot-link" onclick="filterSection(null,'${c}')">${c}</span>`
+    ).join('');
+  }
+}
+
+function filterSection(el,sec){
+  document.querySelectorAll('.mast-nav-item').forEach(n=>n.classList.remove('active'));
+  if(el)el.classList.add('active');
+
+  const all=getPublished();
+  const arts=(sec==='__all__')?all:all.filter(a=>(a.section||'')===(sec||''));
+  renderHero(arts);
+  renderTopStories(arts);
+  renderFeatured(arts);
+}
+
+/* ════════════════════════════════════════
+   HERO RENDER
+════════════════════════════════════════ */
+function renderHero(arts){
+  // Left: 2 hero cards (arts[0], arts[1])
+  const heroLeft=document.getElementById('hero-left');
+  heroLeft.innerHTML='';
+  [0,1].forEach(i=>{
+    const art=arts[i]||null;
+    const card=document.createElement('div');
+    card.className='hero-card';
+    if(art){card.onclick=()=>handleArticleClick(art);}
+    card.innerHTML=`
+      ${adminActionsHTML(art)}
+      <div>
+        <div class="hero-card-eyebrow">
+          <div class="hero-pill">${i===0?'COVER':'COVER'}</div>
+          <div class="hero-issue-line">최신 스토리</div>
+        </div>
+        <div class="hero-card-hed">${ph(art,'title')}</div>
+        <div class="hero-card-dek">${ph(art,'dek')}</div>
+      </div>
+      <div class="hero-byline">
+        <span class="hero-byline-name">${ph(art,'author')}</span>
+        <span class="hero-byline-sep"></span>
+        <span class="hero-byline-time">${art?formatKoreanDate(art.date)||todayKorean():todayKorean()}</span>
+      </div>`;
+    heroLeft.appendChild(card);
+  });
+
+  // Right: 6 list items (arts[0]–arts[5])
+  const heroRightItems=document.getElementById('hero-right-items');
+  heroRightItems.innerHTML='';
+  for(let i=0;i<6;i++){
+    const art=arts[i]||null;
+    const item=document.createElement('div');
+    item.className='hero-list-item';
+    if(art){item.onclick=()=>handleArticleClick(art);}
+    item.innerHTML=`
+      ${adminActionsHTML(art)}
+      <div class="hero-list-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="hero-list-info">
+        <div class="hero-list-cat">${ph(art,'section')}</div>
+        <div class="hero-list-title">${ph(art,'title')}</div>
+        <div class="hero-list-byline">${ph(art,'author')}</div>
+      </div>
+      <div class="hero-list-arrow">↗</div>`;
+    heroRightItems.appendChild(item);
+  }
+}
+
+/* ════════════════════════════════════════
+   TOP STORIES (arts[2]–[4])
+════════════════════════════════════════ */
+function renderTopStories(arts){
+  const grid=document.getElementById('top-stories-grid');
+  const styles=['accent','dark',''];
+  grid.innerHTML='';
+  [2,3,4].forEach((idx,i)=>{
+    const art=arts[idx]||null;
+    const div=document.createElement('div');
+    div.className='card '+(styles[i]||'');
+    if(art){div.onclick=()=>handleArticleClick(art);}
+    div.innerHTML=`
+      ${adminActionsHTML(art)}
+      <div class="card-num">0${i+1}</div>
+      <div class="card-cat">${ph(art,'section')}</div>
+      <div class="card-title">${ph(art,'title')}</div>
+      <div class="card-body">${ph(art,'dek')}</div>
+      <div class="card-byline">${ph(art,'author')}</div>
+      <div class="card-arrow">↗</div>`;
+    grid.appendChild(div);
+  });
+}
+
+/* ════════════════════════════════════════
+   SECTION TITLES
+════════════════════════════════════════ */
+const DEFAULT_SEC_TITLES={featured:'심층 분석 — Featured',team:'법무법인 노바 구성원'};
+function getSecTitles(){
+  try{return{...DEFAULT_SEC_TITLES,...JSON.parse(localStorage.getItem('nova_sec_titles')||'{}')};}
+  catch(e){return{...DEFAULT_SEC_TITLES};}
+}
+function saveSecTitles(obj){localStorage.setItem('nova_sec_titles',JSON.stringify(obj));saveDataToCloud('sec_titles',obj);}
+
+function initSecTitleEditing(){
+  ['featured','team'].forEach(key=>{
+    const el=document.getElementById('sec-title-'+key);
+    if(!el)return;
+    el.textContent=getSecTitles()[key]||DEFAULT_SEC_TITLES[key];
+    el.addEventListener('click',()=>{
+      if(!isAdmin())return;
+      el.contentEditable='true';
+      el.focus();
+    });
+    el.addEventListener('blur',()=>{
+      el.contentEditable='false';
+      const titles=getSecTitles();
+      titles[key]=el.textContent.trim()||DEFAULT_SEC_TITLES[key];
+      saveSecTitles(titles);
+    });
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();el.blur();}});
+  });
+}
+
+/* ════════════════════════════════════════
+   FEATURED — 3 equal cards (arts[5],[6],[7])
+════════════════════════════════════════ */
+function renderFeatured(arts){
+  const sec=document.getElementById('feat-section');
+  sec.innerHTML='';
+  [5,6,7].forEach((idx,i)=>{
+    const art=arts[idx]||null;
+    const div=document.createElement('div');
+    div.className='feat-item';
+    if(art){div.onclick=()=>handleArticleClick(art);}
+    div.innerHTML=`
+      ${adminActionsHTML(art)}
+      <div class="card-cat">${ph(art,'section')}</div>
+      <div class="card-title">${ph(art,'title')}</div>
+      <div class="card-body">${ph(art,'dek')}</div>
+      <div class="feat-byline">${ph(art,'author')}</div>
+      <div class="card-arrow">↗</div>`;
+    sec.appendChild(div);
+  });
+}
+
+/* ════════════════════════════════════════
+   CASES BAND
+════════════════════════════════════════ */
+const DEFAULT_CASES=[
+  {id:'c1',label:'민사',title:'사건명을 입력하세요',body:'법무법인 노바가 수임한 주요 사건 내용을 여기에 입력합니다.',date:''},
+  {id:'c2',label:'형사',title:'사건명을 입력하세요',body:'법무법인 노바가 수임한 주요 사건 내용을 여기에 입력합니다.',date:''},
+  {id:'c3',label:'노동',title:'사건명을 입력하세요',body:'법무법인 노바가 수임한 주요 사건 내용을 여기에 입력합니다.',date:''},
+];
+function getCases(){
+  try{const c=JSON.parse(localStorage.getItem('nova_cases')||'null');return Array.isArray(c)&&c.length?c:[...DEFAULT_CASES];}
+  catch(e){return[...DEFAULT_CASES];}
+}
+function saveCases(arr){localStorage.setItem('nova_cases',JSON.stringify(arr));saveDataToCloud('cases',arr);}
+
+function renderCasesBand(){
+  const grid=document.getElementById('cases-grid');
+  if(!grid)return;
+  const cases=getCases();
+  grid.innerHTML='';
+  cases.forEach((c,i)=>{
+    const div=document.createElement('div');
+    div.className='case-card';
+    if(isAdmin()){div.onclick=()=>{openCasesModal();loadCaseIndex(i);};}
+    div.innerHTML=`
+      <div class="case-card-label">${c.label||'사건'}</div>
+      <div class="case-card-title">${c.title||'사건명을 입력하세요'}</div>
+      <div class="case-card-body">${c.body||''}</div>
+      ${c.date?`<div class="case-card-date">${c.date}</div>`:''}`;
+    grid.appendChild(div);
+  });
+}
+
+function openCasesModal(){
+  document.getElementById('case-modal').classList.add('open');
+  loadCaseToForm();
+}
+function closeCaseModal(){document.getElementById('case-modal').classList.remove('open');}
+document.addEventListener('DOMContentLoaded',()=>{
+  const cm=document.getElementById('case-modal');
+  if(cm)cm.addEventListener('click',e=>{if(e.target===cm)closeCaseModal();});
+});
+
+function loadCaseIndex(i){
+  document.getElementById('case-select').value=String(i);
+  loadCaseToForm();
+}
+function loadCaseToForm(){
+  const idx=parseInt(document.getElementById('case-select').value,10);
+  const cases=getCases();
+  const c=cases[idx]||{};
+  document.getElementById('cmf-title').value=c.title||'';
+  document.getElementById('cmf-body').value=c.body||'';
+  document.getElementById('cmf-date').value=c.date||'';
+  document.getElementById('cmf-label-text').value=c.label||'';
+}
+function saveCaseFromModal(){
+  const idx=parseInt(document.getElementById('case-select').value,10);
+  const cases=getCases();
+  while(cases.length<3)cases.push({...DEFAULT_CASES[cases.length]});
+  cases[idx]={
+    id:cases[idx].id||('c'+(idx+1)),
+    title:document.getElementById('cmf-title').value.trim(),
+    body:document.getElementById('cmf-body').value.trim(),
+    date:document.getElementById('cmf-date').value.trim(),
+    label:document.getElementById('cmf-label-text').value.trim()||'사건',
+  };
+  saveCases(cases);
+  renderCasesBand();
+  closeCaseModal();
+  showToast('사건 정보가 저장되었습니다.');
+}
+
+/* ════════════════════════════════════════
+   TEAM MEMBERS
+════════════════════════════════════════ */
+const DEFAULT_TEAM=[
+  {id:'t1',name:'구성원 이름',role:'변호사',desc:'전문 분야 및 약력을 입력하세요.',photo:''},
+  {id:'t2',name:'구성원 이름',role:'변호사',desc:'전문 분야 및 약력을 입력하세요.',photo:''},
+  {id:'t3',name:'구성원 이름',role:'변호사',desc:'전문 분야 및 약력을 입력하세요.',photo:''},
+  {id:'t4',name:'구성원 이름',role:'변호사',desc:'전문 분야 및 약력을 입력하세요.',photo:''},
+];
+function getTeamMembers(){
+  try{const t=JSON.parse(localStorage.getItem('nova_team')||'null');return Array.isArray(t)&&t.length?t:[...DEFAULT_TEAM];}
+  catch(e){return[...DEFAULT_TEAM];}
+}
+function saveTeamMembers(arr){localStorage.setItem('nova_team',JSON.stringify(arr));saveDataToCloud('team',arr);}
+
+function renderTeam(){
+  const grid=document.getElementById('team-grid');
+  if(!grid)return;
+  const members=getTeamMembers();
+  grid.innerHTML='';
+  members.forEach((m,i)=>{
+    const a=document.createElement('a');
+    a.className='team-card';
+    a.href='https://novalaw.kr/team';
+    a.target='_blank';
+    a.rel='noopener';
+    const initial=(m.name||'N').charAt(0).toUpperCase();
+    const photoHTML=m.photo
+      ?`<div class="team-photo-wrap"><img src="${m.photo}" alt="${m.name}"></div>`
+      :`<div class="team-photo-wrap"><span class="team-photo-init">${initial}</span></div>`;
+    a.innerHTML=`
+      <div class="team-admin-actions">
+        <button class="admin-card-btn edit" onclick="event.preventDefault();event.stopPropagation();openTeamModal();openTeamForm('${m.id}')">✏</button>
+        <button class="admin-card-btn del" onclick="event.preventDefault();event.stopPropagation();deleteTeamMember('${m.id}')">✕</button>
+      </div>
+      ${photoHTML}
+      <div class="team-name">${m.name||'이름'}</div>
+      <div class="team-role">${m.role||'변호사'}</div>
+      <div class="team-desc">${m.desc||''}</div>
+      <span class="team-link-arrow">프로필 보기 →</span>`;
+    grid.appendChild(a);
+  });
+}
+
+/* ── TEAM MODAL ── */
+function openTeamModal(){
+  renderTeamList();
+  document.getElementById('team-modal').classList.add('open');
+}
+function closeTeamModal(){
+  closeTeamForm();
+  document.getElementById('team-modal').classList.remove('open');
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const tm=document.getElementById('team-modal');
+  if(tm)tm.addEventListener('click',e=>{if(e.target===tm)closeTeamModal();});
+});
+
+function renderTeamList(){
+  const list=document.getElementById('team-list');
+  const members=getTeamMembers();
+  list.innerHTML='';
+  members.forEach((m,i)=>{
+    const initial=(m.name||'N').charAt(0).toUpperCase();
+    const avatarHTML=m.photo
+      ?`<div class="team-list-avatar"><img src="${m.photo}" alt="${m.name}"></div>`
+      :`<div class="team-list-avatar">${initial}</div>`;
+    const item=document.createElement('div');
+    item.className='team-list-item';
+    item.innerHTML=`
+      ${avatarHTML}
+      <div class="team-list-info">
+        <div class="team-list-name">${m.name}</div>
+        <div class="team-list-role">${m.role}</div>
+      </div>
+      <div class="team-list-btns">
+        ${i>0?`<button class="tlb up" onclick="moveTeamMember('${m.id}',-1)">↑</button>`:''}
+        ${i<members.length-1?`<button class="tlb dn" onclick="moveTeamMember('${m.id}',1)">↓</button>`:''}
+        <button class="tlb edit" onclick="openTeamForm('${m.id}')">✏ 편집</button>
+        <button class="tlb del" onclick="deleteTeamMember('${m.id}')">✕</button>
+      </div>`;
+    list.appendChild(item);
+  });
+}
+
+let _editingTeamId=null;
+function openTeamForm(id){
+  _editingTeamId=id;
+  const members=getTeamMembers();
+  const m=id?members.find(x=>x.id===id):null;
+  document.getElementById('tmf-id').value=id||'';
+  document.getElementById('tmf-name').value=m?m.name:'';
+  document.getElementById('tmf-role').value=m?m.role:'';
+  document.getElementById('tmf-desc').value=m?m.desc:'';
+  document.getElementById('tmf-photo-url').value='';
+  document.getElementById('tmf-photo-data').value=m?m.photo:'';
+  const prev=document.getElementById('tmf-photo-preview');
+  if(m&&m.photo){prev.src=m.photo;prev.classList.add('show');}
+  else{prev.src='';prev.classList.remove('show');}
+  document.getElementById('team-form').classList.add('open');
+  document.getElementById('tmf-name').focus();
+}
+function closeTeamForm(){
+  document.getElementById('team-form').classList.remove('open');
+  _editingTeamId=null;
+}
+function handleTeamPhotoUpload(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const data=ev.target.result;
+    document.getElementById('tmf-photo-data').value=data;
+    const prev=document.getElementById('tmf-photo-preview');
+    prev.src=data;prev.classList.add('show');
+    document.getElementById('tmf-photo-url').value='';
+  };
+  reader.readAsDataURL(file);
+}
+function previewTeamPhotoUrl(url){
+  const prev=document.getElementById('tmf-photo-preview');
+  if(url){prev.src=url;prev.classList.add('show');document.getElementById('tmf-photo-data').value=url;}
+  else{prev.src='';prev.classList.remove('show');}
+}
+function saveTeamMember(){
+  const id=document.getElementById('tmf-id').value;
+  const name=document.getElementById('tmf-name').value.trim();
+  if(!name){document.getElementById('tmf-name').style.borderColor='var(--red)';return;}
+  document.getElementById('tmf-name').style.borderColor='';
+  const members=getTeamMembers();
+  const photo=document.getElementById('tmf-photo-data').value||document.getElementById('tmf-photo-url').value.trim();
+  if(id){
+    const idx=members.findIndex(x=>x.id===id);
+    if(idx>-1){
+      members[idx]={...members[idx],name,role:document.getElementById('tmf-role').value.trim(),desc:document.getElementById('tmf-desc').value.trim(),photo};
+    }
+  } else {
+    members.push({id:'t'+Date.now(),name,role:document.getElementById('tmf-role').value.trim(),desc:document.getElementById('tmf-desc').value.trim(),photo});
+  }
+  saveTeamMembers(members);
+  renderTeam();
+  renderTeamList();
+  closeTeamForm();
+  showToast('구성원 정보가 저장되었습니다.');
+}
+function deleteTeamMember(id){
+  if(!confirm('이 구성원을 삭제하시겠습니까?'))return;
+  const members=getTeamMembers().filter(m=>m.id!==id);
+  saveTeamMembers(members);
+  renderTeam();
+  renderTeamList();
+}
+function moveTeamMember(id,dir){
+  const members=getTeamMembers();
+  const idx=members.findIndex(m=>m.id===id);
+  if(idx<0)return;
+  const newIdx=idx+dir;
+  if(newIdx<0||newIdx>=members.length)return;
+  [members[idx],members[newIdx]]=[members[newIdx],members[idx]];
+  saveTeamMembers(members);
+  renderTeam();
+  renderTeamList();
+}
+
+/* ════════════════════════════════════════
+   RENDER ALL
+════════════════════════════════════════ */
+function renderAll(){
+  const arts=getPublished();
+  renderNav();
+  renderHero(arts);
+  renderTopStories(arts);
+  renderFeatured(arts);
+  renderCasesBand();
+  renderTeam();
+  initSecTitleEditing();
+  // 뉴스레터 수 업데이트
+  const countEl=document.getElementById('sb-count');
+  if(countEl){
+    countEl.textContent=arts.length
+      ?`현재 ${arts.length}개의 뉴스레터가 발행되어 있습니다.`
+      :'발행된 뉴스레터를 모두 열람하세요.';
+  }
+  if(isAdmin()){
+    document.body.classList.add('admin-mode');
+    document.getElementById('admin-bar').classList.add('visible');
+  } else if(new URLSearchParams(location.search).get('redirect')){
+    setTimeout(openAdminLogin, 300);
+  }
+}
+
+function goSearch(){
+  const q=document.getElementById('sb-input').value.trim();
+  window.location.href='articles.html'+(q?'?q='+encodeURIComponent(q):'');
+}
+
+/* ════════════════════════════════════════
+   ALL ARTICLES MODAL
+════════════════════════════════════════ */
+function openAllModal(){
+  const arts=getPublished();
+  const list=document.getElementById('all-art-list');
+  if(!arts.length){
+    list.innerHTML='<div style="padding:32px;text-align:center;font-family:\'Noto Sans KR\',sans-serif;font-size:13px;color:var(--txt3);">발행된 뉴스레터가 없습니다.</div>';
+  } else {
+    list.innerHTML=arts.map((a,i)=>`
+      <div class="all-art-item" onclick="handleArticleClick(getArticleById('${a.id}'))">
+        <div class="all-art-num">${String(i+1).padStart(2,'0')}</div>
+        <div class="all-art-info">
+          <div class="all-art-pill">${a.section||'뉴스레터'}</div>
+          <div class="all-art-title">${a.title||'(제목 없음)'}</div>
+          <div class="all-art-time">${a.author||''} · ${formatKoreanDate(a.date)||todayKorean()}</div>
+        </div>
+        <div class="all-art-arrow">↗</div>
+        ${isAdmin()?`<div style="display:flex;gap:4px;margin-left:8px;">
+          <button style="background:var(--navy);border:none;color:#fff;padding:4px 8px;font-size:10px;cursor:pointer;" onclick="event.stopPropagation();editArticle('${a.id}')">✏</button>
+          <button style="background:var(--red);border:none;color:#fff;padding:4px 8px;font-size:10px;cursor:pointer;" onclick="event.stopPropagation();deleteArticleFromHome('${a.id}');closeAllModal();">✕</button>
+        </div>`:''}
+      </div>`).join('');
+  }
+  document.getElementById('all-modal').classList.add('open');
+}
+function closeAllModal(){document.getElementById('all-modal').classList.remove('open');}
+document.getElementById('all-modal').addEventListener('click',function(e){if(e.target===this)closeAllModal();});
+
+function getArticleById(id){
+  return getArticles().find(a=>a.id===id)||null;
+}
+
+/* ════════════════════════════════════════
+   SUBSCRIBE MODAL
+════════════════════════════════════════ */
+function openModal(){document.getElementById('modal').classList.add('open');}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    closeModal();
+    closeAllModal();
+    closeAdminLogin();
+    closeCatModal();
+    closeReader();
+    closeTeamModal();
+    closeCaseModal();
+  }
+});
+
+const SCRIPT_URL='YOUR_APPS_SCRIPT_URL_HERE';
+
+async function handleSubscribe(){
+  const emailEl=document.getElementById('email-input');
+  const btn=document.querySelector('.modal-btn');
+  const email=emailEl.value.trim();
+  const consentPrivacy=document.getElementById('consent-privacy');
+  const consentAds=document.getElementById('consent-ads');
+  const consentErr=document.getElementById('consent-err');
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    emailEl.style.borderColor='var(--red)';emailEl.focus();return;
+  }
+  emailEl.style.borderColor='';
+  if(!consentPrivacy.checked||!consentAds.checked){
+    consentErr.classList.add('show');return;
+  }
+  consentErr.classList.remove('show');
+  if(!SCRIPT_URL||SCRIPT_URL==='YOUR_APPS_SCRIPT_URL_HERE'){
+    closeModal();showToast('구독 신청 완료!');emailEl.value='';
+    consentPrivacy.checked=false;consentAds.checked=false;return;
+  }
+  const orig=btn.textContent;
+  btn.textContent='처리 중...';btn.disabled=true;
+  try{
+    await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'email='+encodeURIComponent(email)});
+    closeModal();showToast('구독 신청이 완료되었습니다 ✓');
+    emailEl.value='';consentPrivacy.checked=false;consentAds.checked=false;
+  }catch(err){showToast('오류가 발생했습니다. 다시 시도해 주세요.');}
+  finally{btn.textContent=orig;btn.disabled=false;}
+}
+
+/* ════════════════════════════════════════
+   ADMIN LOGIN MODAL
+════════════════════════════════════════ */
+const _AID='novalawnewsletter404',_APW='nova4047';
+
+function openAdminLogin(){
+  document.getElementById('admin-modal').classList.add('open');
+  document.getElementById('admin-id').value='';
+  document.getElementById('admin-pw').value='';
+  document.getElementById('admin-err').classList.remove('show');
+  document.querySelectorAll('.admin-modal-input').forEach(el=>el.classList.remove('err'));
+  setTimeout(()=>document.getElementById('admin-id').focus(),100);
+}
+function closeAdminLogin(){
+  document.getElementById('admin-modal').classList.remove('open');
+}
+document.getElementById('admin-modal').addEventListener('click',function(e){if(e.target===this)closeAdminLogin();});
+
+function doAdminLogin(){
+  const id=document.getElementById('admin-id').value.trim();
+  const pw=document.getElementById('admin-pw').value;
+  const errEl=document.getElementById('admin-err');
+  document.querySelectorAll('.admin-modal-input').forEach(el=>el.classList.remove('err'));
+  errEl.classList.remove('show');
+  if(id===_AID&&pw===_APW){
+    sessionStorage.setItem('nova_admin','1');
+    closeAdminLogin();
+    const _redirect=new URLSearchParams(location.search).get('redirect');
+    if(_redirect){window.location.href=_redirect;return;}
+    enterAdminMode();
+  } else {
+    document.getElementById('admin-id').classList.add('err');
+    document.getElementById('admin-pw').classList.add('err');
+    errEl.classList.add('show');
+    document.getElementById('admin-pw').value='';
+    document.getElementById('admin-pw').focus();
+  }
+}
+
+/* ════════════════════════════════════════
+   CATEGORY MODAL
+════════════════════════════════════════ */
+function openCatModal(){
+  renderCatList();
+  document.getElementById('cat-modal').classList.add('open');
+}
+function closeCatModal(){
+  document.getElementById('cat-modal').classList.remove('open');
+}
+document.getElementById('cat-modal').addEventListener('click',function(e){if(e.target===this)closeCatModal();});
+
+function renderCatList(){
+  const cats=getCategories();
+  const list=document.getElementById('cat-list');
+  if(!cats.length){
+    list.innerHTML='<div style="font-family:\'Noto Sans KR\',sans-serif;font-size:12px;color:var(--txt3);text-align:center;padding:12px;">카테고리가 없습니다.</div>';
+    return;
+  }
+  list.innerHTML=cats.map((c,i)=>`
+    <div class="cat-item" id="cat-item-${i}">
+      <span class="cat-item-name" id="cat-name-${i}">${c}</span>
+      <input class="cat-item-input" id="cat-input-${i}" value="${c}" style="display:none;" onkeydown="if(event.key==='Enter')saveCatEdit(${i});if(event.key==='Escape')cancelCatEdit(${i})">
+      <button class="cat-item-edit" onclick="startCatEdit(${i})" id="cat-edit-btn-${i}" title="이름 변경">✏</button>
+      <button class="cat-item-del" onclick="deleteCategory(${i})" title="삭제">✕</button>
+    </div>`).join('');
+}
+
+function startCatEdit(i){
+  document.getElementById('cat-name-'+i).style.display='none';
+  document.getElementById('cat-input-'+i).style.display='';
+  document.getElementById('cat-edit-btn-'+i).textContent='✓';
+  document.getElementById('cat-edit-btn-'+i).onclick=()=>saveCatEdit(i);
+  document.getElementById('cat-input-'+i).focus();
+  document.getElementById('cat-input-'+i).select();
+}
+function saveCatEdit(i){
+  const newName=document.getElementById('cat-input-'+i).value.trim();
+  if(!newName)return;
+  const cats=getCategories();
+  cats[i]=newName;
+  saveCategories(cats);
+  renderCatList();
+  renderNav();
+}
+function cancelCatEdit(i){
+  renderCatList();
+}
+function deleteCategory(i){
+  const cats=getCategories();
+  if(!confirm(`"${cats[i]}" 카테고리를 삭제하시겠습니까?`))return;
+  cats.splice(i,1);
+  saveCategories(cats);
+  renderCatList();
+  renderNav();
+}
+function addCategory(){
+  const input=document.getElementById('cat-add-input');
+  const name=input.value.trim();
+  if(!name)return;
+  const cats=getCategories();
+  if(cats.includes(name)){showToast('이미 존재하는 카테고리입니다');return;}
+  cats.push(name);
+  saveCategories(cats);
+  input.value='';
+  renderCatList();
+  renderNav();
+}
+
+/* ════════════════════════════════════════
+   SCROLL PROGRESS
+════════════════════════════════════════ */
+window.addEventListener('scroll',()=>{
+  const pct=(window.scrollY/(document.body.scrollHeight-window.innerHeight))*100;
+  document.getElementById('progress').style.width=pct+'%';
+});
+
+/* ════════════════════════════════════════
+   TOAST
+════════════════════════════════════════ */
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg||'완료!';
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+/* ════════════════════════════════════════
+   INIT
+════════════════════════════════════════ */
+(async function init(){
+  await loadFromCloud();
+  renderAll();
+  if(isAdmin())enterAdminMode();
+})();
+</script>
+</body>
+</html>
