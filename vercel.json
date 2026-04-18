@@ -1,0 +1,6 @@
+{
+  "outputDirectory": "newsletterfiles",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/$1" }
+  ]
+}
